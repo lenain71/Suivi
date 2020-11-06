@@ -1,0 +1,22 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "gestion-culture-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/gestionCulture/GestionCultureWebPart.js",
+          "manifest": "./src/webparts/gestionCulture/GestionCultureWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "GestionCultureWebPartStrings": "lib/webparts/gestionCulture/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "servicesStrings": "node_modules/neos-generic-components/lib/common/services/loc/{locale}.js",
+    "FormFieldStrings": "node_modules/neos-generic-components/lib/webparts/detailListForm/components/formFields/loc/{locale}.js",
+    "DetailListFormStrings": "node_modules/neos-generic-components/lib/webparts/detailListForm/components/loc/{locale}.js"
+  }
+}
