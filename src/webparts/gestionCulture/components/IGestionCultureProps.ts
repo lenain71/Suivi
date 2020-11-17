@@ -6,6 +6,7 @@ import { ISuiviService } from "../../../Common/Contracts/ISuiviService";
 import { IGenericProps } from "../../../Common/IGenericProps";
 import { IMyFoodHubService } from "../../../Common/Contracts/IMyFoodHubService";
 import GenericConfiguration from "../../../Common/Entities/GenericConfiguration";
+import { ISemisService } from "../../../Common/Contracts/ISemisService";
 
 export  class IGestionCultureProps implements IGenericProps {
   public match: any;
@@ -14,6 +15,7 @@ export  class IGestionCultureProps implements IGenericProps {
   public webUrl: string;
   public absoluteApplicationUrl: string;
   public listUrl: string;
+  public semisListUrl: string;
   public listId: string;
   public creationMode: boolean;
   public formType: ControlMode;
@@ -27,6 +29,7 @@ export  class IGestionCultureProps implements IGenericProps {
   public onSubmitFailed?(fieldErrors: any): void;
   public onUpdateFields?(newFields: IFieldConfiguration[]): void;
   public suiviService: ISuiviService;
+  public semisService: ISemisService;
   public myfoodHubService: IMyFoodHubService;
   public configuration: GenericConfiguration;
 }

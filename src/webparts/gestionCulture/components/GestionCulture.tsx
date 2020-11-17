@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Stack, StackItem, Layer, Spinner, SpinnerSize, Pivot, PivotLinkFormat, PivotLinkSize, PivotItem, Label, MessageBar, MessageBarType } from 'office-ui-fabric-react';
-import {BrowserRouter, Route, Switch, HashRouter, Redirect } from 'react-router-dom';
+import {BrowserRouter, Router, Route, Switch, HashRouter, Redirect } from 'react-router-dom';
 
 import { IGestionCultureProps } from './IGestionCultureProps';
 import { IGestionCultureStates } from './IGestionCultureStates';
@@ -15,6 +15,8 @@ import ListData from './Forms/ListData';
 import EvolListData from './Forms/EvolListData';
 import { ControlMode } from 'neos-generic-components/lib/common/datatypes/ControlMode';
 import Consts from '../../../Common/Constants';
+import SemisListData from './Forms/SemisListData';
+import SemisNewEditData from './Forms/SemisNewEditData';
 
 export default class GestionCulture extends React.Component<IGestionCultureProps, IGestionCultureStates> {
   
@@ -33,28 +35,59 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
       {
         path: "/",
         exact: true,
+        sensative: true,
         component: () => <EvolListData {...this.props} archiveMode={false} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
       },
       {
-        path: "/Manage",
+        path: "/Semis",
+        sensative: false,
         exact: false,
-        component: () => <ListData {...this.props} archiveMode={false} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
+        component: () => <SemisListData {...this.props} archiveMode={false}  updateSelectedItemId={(id) => this.updateSelectedItemId(id)} />
       },
       {
+        path: "/Manage",
+        sensative: false,
+        exact: false,
+        component: () => <ListData {...this.props} archiveMode={false} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
+       },
+      {
         path: "/NewEditData/New",
+        sensative: false,
         exact: false,
         component: ({match}) => <NewEditData {...this.props} match={match} formType={ControlMode.New} />
       },
       {
         path: "/NewEditData/Update:id",
+        sensative: false,
         exact: false,
         component: ({match}) => <NewEditData {...this.props} match={match} itemId={this.state.cultureSelected} 
         formType={ControlMode.Edit} />
       },
       {
         path: "/NewEditData/View:id",
-        exact: false,
+        sensative: false,
+        exact: true,
         component: ({match}) => <NewEditData {...this.props} match={match} itemId={this.state.cultureSelected} 
+        formType={ControlMode.Display} />
+      },
+      {
+        path: "/SemisNewEditData/New",
+        sensative: false,
+        exact: false,
+        component: ({match}) => <SemisNewEditData {...this.props} match={match} formType={ControlMode.New} />
+      },
+      {
+        path: "/SemisNewEditData/Update:id",
+        sensative: false,
+        exact: false,
+        component: ({match}) => <SemisNewEditData {...this.props} match={match} itemId={this.state.cultureSelected} 
+        formType={ControlMode.Edit} />
+      },
+      {
+        path: "/SemisNewEditData/View:id",
+        sensative: false,
+        exact: true,
+        component: ({match}) => <SemisNewEditData {...this.props} match={match} itemId={this.state.cultureSelected} 
         formType={ControlMode.Display} />
       },
       /*{
@@ -64,6 +97,7 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
       },*/
       {
         path: "/Archive",
+        sensative: false,
         exact: false,
         component: () => <EvolListData {...this.props} archiveMode={true} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
       }
@@ -97,29 +131,31 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
                 </MessageBar>
               }
 
-        <HashRouter>
+        <BrowserRouter basename="/sites/MyFoodSuivi/SitePages/MyFood-Suivi.aspx">
+        {/* <HashRouter> */}
         <Pivot aria-label="Links of Large Tabs Pivot Example" 
           linkFormat={PivotLinkFormat.tabs} 
           linkSize={PivotLinkSize.large}>
-            <PivotItem headerText={strings.HomeNav} itemKey={strings.HomeNav} itemProp="#/">
+            <PivotItem headerText={strings.HomeNav} itemKey={strings.HomeNav} itemIcon="Home" itemProp="/">
               <Redirect to="/" />
             </PivotItem>
-            <PivotItem headerText={strings.NewEditNav} itemKey={strings.NewEditNav} itemProp="/Manage">
-              <Redirect to="/Manage" />
+            <PivotItem headerText={strings.NewEditNav} itemKey={strings.NewEditNav} itemIcon="Precipitation" itemProp="/Semis">
+              <Redirect to="/Semis" />
             </PivotItem>
-            <PivotItem headerText={strings.ArchiveNav} itemKey={strings.ArchiveNav} itemProp="/Archive">
+            <PivotItem headerText={strings.ArchiveNav} itemKey={strings.ArchiveNav} itemIcon="Archive" itemProp="/Archive">
               <Redirect to="/Archive" />
             </PivotItem>
         </Pivot>
         <Stack tokens={Consts.verticalGapStackTokens}>
           <StackItem>
             <Switch> {this.routes.map((route, i) => (
-                  <Route index={i} path={route.path} exact={route.exact} component={route.component} />
+                  <Route index={i} path={route.path} exact={route.exact} sensative={route.sensative} component={route.component} />
                 ))}
             </Switch>
-          </StackItem>
+           </StackItem>
         </Stack>
-      </HashRouter>
+        {/* </HashRouter> */}
+      </BrowserRouter>
     </div>
     );
   }

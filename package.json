@@ -31,6 +31,7 @@
     "react-dom": "16.8.5",
     "react-image-mapper": "0.0.15",
     "react-moment": "^0.9.7",
+    "react-responsive-carousel": "^3.2.10",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@ import { IFieldConfiguration } from "neos-generic-components/lib/webparts/detail
 import { ControlMode } from "neos-generic-components/lib/common/datatypes/ControlMode";
 import { CarouselRenderer } from "../Common/CarouselRenderer";
 
-export default class NewEditData extends React.Component<IGestionCultureProps, IGestionCultureStates> {
+export default class SemisNewEditData extends React.Component<IGestionCultureProps, IGestionCultureStates> {
     constructor(props: any) {
         super(props);
 
@@ -51,7 +51,7 @@ export default class NewEditData extends React.Component<IGestionCultureProps, I
                     <DetailListForm 
                     title={this.props.title} 
                     webUrl={this.props.webUrl}
-                    listUrl={this.props.listUrl}
+                    listUrl={this.props.semisListUrl}
                     id={Number(this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId)}
                     formType={this.props.formType}
                     spHttpClient={this.props.httpClientContext}
@@ -61,24 +61,6 @@ export default class NewEditData extends React.Component<IGestionCultureProps, I
                     showUnsupportedFields={this.props.showUnsupportedFields}
                     onSubmitSucceeded={(id: number ) => this.props.onSubmitSucceeded(id)}
                     onUpdateFields={(fields: IFieldConfiguration[]) => this.props.onUpdateFields(fields)} />
-                </StackItem>
-               
-                <StackItem>
-                    {this.props.formType != ControlMode.New &&
-                        <CarouselRenderer itemId={Number(this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId)}
-                         suiviService={this.props.suiviService} />
-                }
-                </StackItem>
-            </Stack>
-            <Stack>
-            <StackItem>
-                    {this.props.formType != ControlMode.New && 
-                        <ListItemAttachments listId={this.props.listId} itemId={Number(this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId)}
-                         context={this.props.webpartContext} openAttachmentsInNewWindow={true} />
-                }
-                </StackItem>
-                <StackItem>
-                    <QRCodeRenderer identifier={this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId} absoluteUrl={this.props.absoluteApplicationUrl}></QRCodeRenderer>
                 </StackItem>
             </Stack>
           </div>

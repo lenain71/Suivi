@@ -27,6 +27,8 @@ import MockMyFoodHubService from '../../Common/Services/MockMyFoodHubService';
 import MyFoodHubService from '../../Common/Services/MyFoodHubService';
 import { IGenericConfigurationServices } from '../../Common/Contracts/IGenericConfigurationServices';
 import GenericConfigurationService from '../../Common/Services/GenericConfigurationService';
+import { ISemisService } from '../../Common/Contracts/ISemisService';
+import { SemisService } from '../../Common/Services/SemisService';
 
 export interface IGestionCultureWebPartProps {
   
@@ -36,6 +38,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
 
   private listService: IListService;
   private suiviService: ISuiviService;
+  private semisService: ISemisService;
   private myfoodHubService: IMyFoodHubService;
   private configService: IGenericConfigurationServices;
   private cachedLists = null;
@@ -51,6 +54,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
       this.configService = new GenericConfigurationService();
       this.listService = new ListService(this.context.spHttpClient);
       this.suiviService = new SuiviService();
+      this.semisService = new SemisService();
       
       this.properties.redirectUrl = window.location.href;
     });     
@@ -99,6 +103,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
             webUrl: this.context.pageContext.web.absoluteUrl,
             absoluteApplicationUrl: window.location.href,
             listUrl: this.properties.listUrl,
+            semisListUrl: this.properties.semisListUrl,
             listId: this.properties.listId,
             itemId: '',
             fields: this.properties.fields,
@@ -109,6 +114,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
             webpartContext: this.context,
             onSubmitSucceeded: (id: number) => this.formSubmitted(id),
             onUpdateFields: (fields: IFieldConfiguration[]) => this.updateField(fields),
+            semisService: this.semisService,
             suiviService: this.suiviService,
             myfoodHubService: this.myfoodHubService,
             configuration: this.properties.configuration
@@ -154,6 +160,12 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
             loadOptions: this.loadLists.bind(this),
             onPropertyChange: this.onListChange.bind(this),
             selectedKey: this.properties.listUrl,
+          }),
+          new PropertyPaneAsyncDropdown('semisListUrl', {
+            label: strings.SemisListFiedLabel,
+            loadOptions: this.loadLists.bind(this),
+            onPropertyChange: this.onListChange.bind(this),
+            selectedKey: this.properties.semisListUrl,
           }),
          PropertyPaneDropdown('formType', {
             label: strings.FormTypeFieldLabel,
