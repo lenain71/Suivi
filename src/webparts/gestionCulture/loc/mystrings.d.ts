@@ -2,6 +2,7 @@ declare interface IGestionCultureWebPartStrings {
   Loading: string;
   GenericErrorMessage: string;
   HomeNav: string;
+  SemisNav: string;
   NewEditNav: string;
   ArchiveNav: string;
   PropertyPaneDescription: string;
@@ -23,9 +24,12 @@ declare interface IGestionCultureWebPartStrings {
   ConfigureWebpartButtonText: string;
   ErrorOnLoadingLists: string;
   MessageLoading: string;
+  SearchPlaceHolder: string;
   RecolteDialogTitle: string;
   RecolteDialogPoid : string;
   RecolteDialogComment: string;
+  GoToDialogTitle: string;
+  GoToDialogSelect: string;
 }
 
 declare module 'GestionCultureWebPartStrings' {

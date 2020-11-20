@@ -21,7 +21,7 @@
     "@pnp/graph": "^2.0.10",
     "@pnp/sp": "^2.0.10",
     "@pnp/spfx-controls-react": "^2.1.0",
-    "@uifabric/react-cards": "^0.114.9",
+    "@uifabric/react-cards": "^0.114.14",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.31",
     "neos-generic-components": "^1.11.4",

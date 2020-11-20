@@ -112,7 +112,7 @@ class RecolteDialogContent extends React.Component<IRecolteDialogContentProps, I
             _weigth = 0;
         }
 
-        this.suiviService.RecolteData(request.id.ID, request.comment, _weigth).then(() => {
+        this.suiviService.RecolteData(request.id.Id, request.comment, _weigth).then(() => {
             this.result.status = "OK";
             this.close();
         }).catch((error) => {

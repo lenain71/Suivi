@@ -4,7 +4,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/attachments";
 import { ISuiviService } from "../Contracts/ISuiviService";
-import { IItemUpdateResult } from "@pnp/sp/items";
+import { IItem, IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import { Attachement } from "../Entities/Attachement";
 
 export class SuiviService implements ISuiviService {
@@ -29,7 +29,14 @@ export class SuiviService implements ISuiviService {
                 });
             return imgs;
             });
-        }
+    }
+
+    public async GetZipGrowList(user: string) : Promise<any[]> {
+        return await sp.web.lists.getByTitle("Suivi").items
+        .select("MyFood_zipGrowType","MyFood_ZipGrowID")
+        .filter(`Author eq ${user}`)
+        .orderBy("MyFood_ZipGrowID", true).get();
+    }
 
     public async RecolteData(itemId: string, comment: string, weigth: number): Promise<IItemUpdateResult> {
 
@@ -38,6 +45,31 @@ export class SuiviService implements ISuiviService {
             MyFood_RecolteKG: weigth,
             MyFood_RecolteRemarque: comment,
             MyFood_RecolteDate: new Date().toJSON()
+        });
+    }
+
+    public async TransfertTo(itemId: string, zipGrowID: string, zipGrowType: string): Promise<IItemAddResult> {
+        //return Promise.resolve();
+
+        //get infro from semis
+
+        //create culture
+        return await sp.web.lists.getByTitle("Semis").items.getById(Number(itemId))
+        .select("MyFood_CultureDate","Id","CultureTestId","CultureTest/Title")
+        .expand("CultureTest").get().then((semis) => {
+            return sp.web.lists.getByTitle('Suivi').items.add({
+                Title: semis.CultureTest.Title,
+                MyFood_ZipGrowID: zipGrowID,
+                MyFood_zipGrowType: zipGrowType,
+                MyFood_SerreType: '',
+                CultureTestId: semis.CultureTestId,
+                MyFood_CultureDate: new Date().toJSON(),
+                InProduction: true,
+            }).then(() =>{
+                return sp.web.lists.getByTitle("Semis").items.getById(Number(itemId)).update({
+                    InProduction: false
+                });
+            });
         });
     }
 

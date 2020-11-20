@@ -4,6 +4,7 @@ define([], function() {
     "Loading": "Loading...",
     "GenericErrorMessage": "An error occured, please contact administrator.",
     "HomeNav":"Home",
+    "SemisNav": "Semis Management",
     "NewEditNav": "Farming Management",
     "ArchiveNav": "Archive Farming",
     'BasicGroupName': 'Paramètres',
@@ -24,8 +25,11 @@ define([], function() {
     'ConfigureWebpartButtonText': 'Configure WebPart',
     'ErrorOnLoadingLists': 'Error when loading Lists : ',
     'MessageLoading' : 'WebPart Loading in progress...',
+    'SearchPlaceHolder': 'Filter',
     'RecolteDialogTitle' : 'Gathering',
     'RecolteDialogPoid' : 'harvest weight (kg)',
-    'RecolteDialogComment': 'harvest comment'
+    'RecolteDialogComment': 'harvest comment',
+    'GoToDialogTitle': 'Go to zipGrow',
+    'GoToDialogSelect': 'Select zipGrow'
   }
 });

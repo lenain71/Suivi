@@ -5,6 +5,7 @@ define([], function() {
     "Loading": "Chargement...",
     "GenericErrorMessage": "Une erreur s'est produite, veuillez contacter l'administrateur.",
     "HomeNav":"Accueil",
+    "SemisNav": "Gestion des semis",
     "NewEditNav": "Gestion des cultures",
     "ArchiveNav": "Archives des cultures",
     'PropertyPaneDescription': 'Configurez le formulaire de la liste ici. Une fois la liste configurée, les champs peuvent être déplacés, insérés et supprimés dans le contenu du webpart.',
@@ -26,8 +27,11 @@ define([], function() {
     'ConfigureWebpartButtonText': 'Configurer le WebPart',
     'ErrorOnLoadingLists': 'Erreur de chargement des listes : ',
     'MessageLoading' : 'Chargement de la webPart en cours...',
+    'SearchPlaceHolder': 'Filtrer',
     'RecolteDialogTitle' : 'Recolter la culture',
     'RecolteDialogPoid' : 'Poid de récolte (kg)',
-    'RecolteDialogComment': 'Commentaire de récolte'
+    'RecolteDialogComment': 'Commentaire de récolte',
+    'GoToDialogTitle': 'Basculter en culture',
+    'GoToDialogSelect': 'Selectionner un emplacement'
   }
 });

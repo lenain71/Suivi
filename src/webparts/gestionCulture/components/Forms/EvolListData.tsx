@@ -1,7 +1,12 @@
 import * as React from "react";
 import { Redirect } from 'react-router-dom';
 import { GridLayout } from "@pnp/spfx-controls-react/lib/GridLayout";
-import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, Button, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions } from "office-ui-fabric-react";
+import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem,
+     IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone,
+      Button, ISize, IDocumentCardPreviewProps, ImageFit,
+       DocumentCard, DocumentCardType, DocumentCardPreview,
+        DocumentCardLocation, DocumentCardDetails, DocumentCardTitle,
+         DocumentCardActivity, DocumentCardActions, SearchBox } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -14,6 +19,8 @@ import ResumeConfiguration from "../Common/ResumeConfiguration";
 
 
 export default class EvolListData extends React.Component<IListDataProps, IListDataStates> {
+
+    private initialItems: any[];
 
     constructor(props: any) {
         super(props);
@@ -30,6 +37,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         isLoaded: false
       };
 
+      this.initialItems = this.state.items;
       this.redirectToNew = this.redirectToNew.bind(this);
       this.loadData = this.loadData.bind(this);
     }
@@ -81,6 +89,12 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                         <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
                     }
                     <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                </StackItem>
+                <StackItem>
+                    <SearchBox placeholder={strings.SearchPlaceHolder} value={this.state.searchValue} iconProps={{iconName: 'Filter'}} 
+                    onClear={this.loadData}
+                    onChange={(newValue) => this.SearchData(newValue)}
+                    onSearch={(newValue) => this.SearchData(newValue)} />
                 </StackItem>
                 <StackItem>
                     <GridLayout
@@ -170,10 +184,21 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
           );
           
           Promise.all(promises).then(() => {
+              this.initialItems = items;
               this.setState({items: items, isLoaded: true, configuration: config.length != 0 ? config[0] : null});
           }).catch((error) => {
             this.setState({isError: true, isLoaded: true, errors: [...this.state.errors,error]});
         });
+    }
+
+    private SearchData(value) : void {
+
+        if(value != null && value != '') {
+            this.setState({items: this.state.items.filter(item => item.MyFood_CultureType.toLowerCase().startsWith(value.toLowerCase()))});
+        }
+        else {
+            this.setState({items: this.initialItems});
+        }
     }
 
     private filterData(filter: string) : void {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Redirect } from 'react-router-dom';
 import { GridLayout } from "@pnp/spfx-controls-react/lib/GridLayout";
-import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, Button, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions } from "office-ui-fabric-react";
+import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, Button, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions, SearchBox } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -12,8 +12,11 @@ import CreationRecolteDialog from "../Dialogs/RecolteDialog";
 import * as moment from "moment";
 import ResumeConfiguration from "../Common/ResumeConfiguration";
 import SemisMap from "../Common/SemisMap";
+import GoToDialog from "../Dialogs/GoToDialog";
 
 export default class SemisListData extends React.Component<IListDataProps, IListDataStates> {
+
+    private initialItems: any[];
 
     constructor(props: any) {
         super(props);
@@ -30,6 +33,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
         isLoaded: false
       };
 
+      this.initialItems = this.state.items;
       this.redirectToNew = this.redirectToNew.bind(this);
       this.loadData = this.loadData.bind(this);
     }
@@ -83,6 +87,12 @@ export default class SemisListData extends React.Component<IListDataProps, IList
                     <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
                 </StackItem>
                 <StackItem>
+                    <SearchBox placeholder={strings.SearchPlaceHolder} value={this.state.searchValue} iconProps={{iconName: 'Filter'}} 
+                    onClear={this.loadData}
+                    onChange={(newValue) => this.SearchData(newValue)}
+                    onSearch={(newValue) => this.SearchData(newValue)} />
+                </StackItem>
+                <StackItem>
                     <GridLayout
                         ariaLabel="List of content, use right and left arrow keys to navigate, arrow down to access details."
                         items={this.state.items}
@@ -117,9 +127,9 @@ export default class SemisListData extends React.Component<IListDataProps, IList
       if(!this.props.archiveMode) {
         documentCardActions.push(
             {
-              ariaLabel: 'Recolter',
+              ariaLabel: 'Mettre en culture',
               iconProps:{iconName:'Accept'},
-              onClick: this.showAndRecolteData.bind(this, item)
+              onClick: this.showAndGoToData.bind(this, item)
             },
             {
               ariaLabel: 'Supprimer',
@@ -133,7 +143,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
           <DocumentCard type={isCompact ? DocumentCardType.compact : DocumentCardType.normal}>
             <DocumentCardPreview {...previewProps} />
             {!isCompact && <DocumentCardLocation 
-                location={ `zone n° :`}
+                location={ `zone n° : ${item.MyFood_emplacement}`}
                 onClick={()=> this.filterData(item.MyFood_ZipGrowID)} />}
             <DocumentCardDetails>
               <DocumentCardTitle
@@ -170,10 +180,21 @@ export default class SemisListData extends React.Component<IListDataProps, IList
           );
           
           Promise.all(promises).then(() => {
+            this.initialItems = items;
               this.setState({items: items, isLoaded: true, configuration: config.length != 0 ? config[0] : null});
           }).catch((error) => {
             this.setState({isError: true, isLoaded: true, errors: [...this.state.errors,error]});
         });
+    }
+
+    private SearchData(value) : void {
+
+        if(value != null && value != '') {
+            this.setState({items: this.state.items.filter(item => item.MyFood_CultureType.toLowerCase().startsWith(value.toLowerCase()))});
+        }
+        else {
+            this.setState({items: this.initialItems});
+        }
     }
 
     private filterData(filter: string) : void {
@@ -204,8 +225,8 @@ export default class SemisListData extends React.Component<IListDataProps, IList
         });
     }
 
-    private showAndRecolteData = (item: any) : void => {
-        const dialog = new CreationRecolteDialog(this.props.suiviService,item);
+    private showAndGoToData = (item: any) : void => {
+        const dialog = new GoToDialog(this.props.suiviService,this.props.webpartContext.pageContext.legacyPageContext["userId"],item);
         dialog.show().then(() => {
             if(dialog.result.status == 'OK') {
                 this.loadData();

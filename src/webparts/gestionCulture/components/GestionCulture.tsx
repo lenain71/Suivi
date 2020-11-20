@@ -139,7 +139,7 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
             <PivotItem headerText={strings.HomeNav} itemKey={strings.HomeNav} itemIcon="Home" itemProp="/">
               <Redirect to="/" />
             </PivotItem>
-            <PivotItem headerText={strings.NewEditNav} itemKey={strings.NewEditNav} itemIcon="Precipitation" itemProp="/Semis">
+            <PivotItem headerText={strings.SemisNav} itemKey={strings.SemisNav} itemIcon="Precipitation" itemProp="/Semis">
               <Redirect to="/Semis" />
             </PivotItem>
             <PivotItem headerText={strings.ArchiveNav} itemKey={strings.ArchiveNav} itemIcon="Archive" itemProp="/Archive">

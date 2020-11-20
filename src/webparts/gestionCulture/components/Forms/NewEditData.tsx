@@ -71,12 +71,12 @@ export default class NewEditData extends React.Component<IGestionCultureProps, I
                 </StackItem>
             </Stack>
             <Stack>
-            <StackItem>
+            {/* <StackItem>
                     {this.props.formType != ControlMode.New && 
                         <ListItemAttachments listId={this.props.listId} itemId={Number(this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId)}
                          context={this.props.webpartContext} openAttachmentsInNewWindow={true} />
                 }
-                </StackItem>
+                </StackItem> */}
                 <StackItem>
                     <QRCodeRenderer identifier={this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId} absoluteUrl={this.props.absoluteApplicationUrl}></QRCodeRenderer>
                 </StackItem>

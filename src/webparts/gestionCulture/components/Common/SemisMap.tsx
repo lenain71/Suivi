@@ -23,15 +23,16 @@ export default class SemisMap extends React.Component<IZipGrowProps, IZipGrowSta
               { name: "ZoneUpRight", shape: "rect", coords: [387,155,746,216], FillColor: "red" },
               { name: "ZoneMiddleExtraLeft", shape: "rect", coords: [17,221,149,347], FillColor: "red" },
               { name: "ZoneMiddleLeft", shape: "rect", coords: [152,221,301,346], FillColor: "red" },
-              { name: "ZoneMiddleRight", shape: "rect", coords: [314,221,448,347], FillColor: "red" },
-              { name: "ZoneMiddleExtraRight", shape: "rect", coords: [456,222,594,347], FillColor: "red" },
-              { name: "ZoneDownLeft", shape: "rect", coords: [603,218,746,347], FillColor: "red" },
-              { name: "ZoneDownRight", shape: "rect", coords: [8,355,377,412], FillColor: "red" },
-              { name: "ZoneBottonDownExtraLeft", shape: "rect", coords: [387,354,748,414], FillColor: "red" },
-              { name: "ZoneBottonDownLeft", shape: "rect", coords: [8,416,149,542], FillColor: "red" },
-              { name: "ZoneBottonDownMiddle", shape: "rect", coords: [157,416,302,540], FillColor: "red" },
-              { name: "ZoneBottonDownRight", shape: "rect", coords: [311,419,452,539], FillColor: "red" },
-              { name: "ZoneBottonDownExtraRight", shape: "rect", coords: [605,418,749,541], FillColor: "red" }
+              { name: "ZoneMiddle", shape: "rect", coords: [314,221,448,347], FillColor: "red"},
+              { name: "ZoneMiddleRight", shape: "rect", coords: [456,222,594,347], FillColor: "red"},
+              { name: "ZoneMiddleExtraRight", shape: "rect", coords: [603,218,746,347], FillColor: "red"},
+              { name: "ZoneDownLeft", shape: "rect",coords: [8,355,377,412], FillColor: "red"},
+              { name: "ZoneDownRight", shape: "rect", coords: [387,354,748,414], FillColor: "red"},
+              { name: "ZoneBottonDownExtraLeft", shape: "rect",coords: [8,416,149,542], FillColor: "red"},
+              { name: "ZoneBottonDownLeft", shape: "rect", coords: [157,416,302,540], FillColor: "red"},
+              { name: "ZoneBottonDownMiddle", shape: "rect", coords: [311,419,452,539], FillColor: "red"},
+              { name: "ZoneBottonDownRight", shape: "rect", coords: [458,417,598,539], FillColor: "red"},
+              { name: "ZoneBottonDownExtraRight", shape: "rect", coords: [605,418,749,541], FillColor: "red"}
             ]
           };
 
