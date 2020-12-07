@@ -5,16 +5,16 @@ import { IZipGrowProps } from "./IZipGrowProps";
 import { IZipGrowStates } from "./IZipGrowStates";
 
 export default class SemisMap extends React.Component<IZipGrowProps, IZipGrowStates> {
-
-    private _imageUrl : string;
     private _map: any;
 
     constructor(props: any) {
         super(props);
 
-        this._imageUrl = "https://neosideadesign.sharepoint.com/sites/MyFoodSuivi/SiteAssets/semis.png";
         this._map = {
+
+            type: "semis",
             name: "semis-map",
+            imageUrl: "https://neosideadesign.sharepoint.com/sites/MyFoodSuivi/SiteAssets/semis.png",
             areas: [
               { name: "ZoneTopUpLeft", shape: "rect", coords: [23,23,303,147], PreFillColor: "rgba(46,166,54,0.5)green"  },
               { name: "ZoneTopUpMiddle", shape: "rect", coords: [312,22,448,148], FillColor: "pink"  },
@@ -37,7 +37,9 @@ export default class SemisMap extends React.Component<IZipGrowProps, IZipGrowSta
           };
 
         this.state = {
-            hoveredArea : null
+            hoveredArea : null,
+            selectedMap: this._map,
+            isConfigured: true
           };
     }
 
@@ -47,7 +49,7 @@ export default class SemisMap extends React.Component<IZipGrowProps, IZipGrowSta
     public render(): React.ReactElement<any> {
         return (
             <div className={styles.zipMap}>
-               <ImageMapper src={this._imageUrl} map={this._map}
+               <ImageMapper src={this.state.selectedMap.imageUrl} map={this.state.selectedMap}
                     onLoad={this.load}
                     onClick={(area) => this.click(area)}
                     onMouseEnter={(area) => this.enterArea(area)}

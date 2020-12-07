@@ -30,6 +30,9 @@ declare interface IGestionCultureWebPartStrings {
   RecolteDialogComment: string;
   GoToDialogTitle: string;
   GoToDialogSelect: string;
+  GrowingTypeText: string;
+  serreTypeTitle: string;
+
 }
 
 declare module 'GestionCultureWebPartStrings' {

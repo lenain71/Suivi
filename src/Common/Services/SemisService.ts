@@ -19,7 +19,9 @@ export class SemisService implements ISemisService {
         //get all cuture types used after to map and get MyFood_thumbnail parameters (cannot expand Image type filed from lookup) 
         return await sp.web.lists.getByTitle("Types de Cultures").items
         .select("Id","MyFood_thumbnail")
-        .orderBy("Title",true).get().then((data: any) => {
+        .orderBy("Title",true)
+        .usingCaching()
+        .get().then((data: any) => {
             data.map((item, idx)=> {
                 let result: any = {
                     id: item.Id,
@@ -58,7 +60,9 @@ export class SemisService implements ISemisService {
         //get all cuture types used after to map and get MyFood_thumbnail parameters (cannot expand Image type filed from lookup) 
         return await sp.web.lists.getByTitle("Types de Cultures").items
         .select("Id","MyFood_thumbnail")
-        .orderBy("Title",true).get().then((data: any) => {
+        .orderBy("Title",true)
+        .usingCaching()
+        .get().then((data: any) => {
             data.map((item, idx)=> {
                 let result: any = {
                     id: item.Id,

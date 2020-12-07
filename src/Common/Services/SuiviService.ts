@@ -2,10 +2,12 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import "@pnp/sp/fields";
 import "@pnp/sp/attachments";
 import { ISuiviService } from "../Contracts/ISuiviService";
 import { IItem, IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import { Attachement } from "../Entities/Attachement";
+import { IFieldInfo } from "@pnp/sp/fields";
 
 export class SuiviService implements ISuiviService {
 
@@ -35,7 +37,18 @@ export class SuiviService implements ISuiviService {
         return await sp.web.lists.getByTitle("Suivi").items
         .select("MyFood_zipGrowType","MyFood_ZipGrowID")
         .filter(`Author eq ${user}`)
-        .orderBy("MyFood_ZipGrowID", true).get();
+        .orderBy("MyFood_ZipGrowID", true)
+        .usingCaching()
+        .get();
+    }
+
+     public async GetGrowingType(): Promise<any[]> {
+        return await sp.web.lists.getByTitle("Suivi").fields.getByInternalNameOrTitle("MyFood_SerreType").select('Choices')
+        .usingCaching()
+        .get().then(
+            (info: any) => {
+            return info.Choices;
+        });
     }
 
     public async RecolteData(itemId: string, comment: string, weigth: number): Promise<IItemUpdateResult> {
@@ -83,7 +96,9 @@ export class SuiviService implements ISuiviService {
         //get all cuture types used after to map and get MyFood_thumbnail parameters (cannot expand Image type filed from lookup) 
         return await sp.web.lists.getByTitle("Types de Cultures").items
         .select("Id","MyFood_thumbnail")
-        .orderBy("Title",true).get().then((data: any) => {
+        .orderBy("Title",true)
+        .usingCaching()
+        .get().then((data: any) => {
             data.map((item, idx)=> {
                 let result: any = {
                     id: item.Id,
@@ -97,7 +112,8 @@ export class SuiviService implements ISuiviService {
             .select("MyFood_CultureDate","MyFood_zipGrowType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
             .expand("CultureTest")
             .filter(`Author eq ${user} and InProduction eq ${!archive ? 1 : 0}`)
-            .orderBy("MyFood_CultureDate", true).get().then((d: any) => {
+            .orderBy("MyFood_CultureDate", true)
+            .get().then((d: any) => {
                 d.map((it) => {
                     let res: any = {
                         Id: it.Id,
@@ -125,7 +141,9 @@ export class SuiviService implements ISuiviService {
          //get all cuture types used after to map and get MyFood_thumbnail parameters (cannot expand Image type filed from lookup) 
          return await sp.web.lists.getByTitle("Types de Cultures").items
          .select("Id","MyFood_thumbnail")
-         .orderBy("Title",true).get().then((data: any) => {
+         .orderBy("Title",true)
+         .usingCaching()
+         .get().then((data: any) => {
              data.map((item, idx)=> {
                  let result: any = {
                      id: item.Id,
@@ -138,6 +156,50 @@ export class SuiviService implements ISuiviService {
                 .select("MyFood_CultureDate","MyFood_zipGrowType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
                 .expand("CultureTest")
                 .filter(`Author eq ${user} and MyFood_ZipGrowID eq ${zipGrowID} and InProduction eq ${!archive ? 1 : 0}`)
+                .orderBy("MyFood_CultureDate", true)
+                .get().then((d: any) => {
+                    d.map((it) => {
+                        let res: any = {
+                            Id: it.Id,
+                            MyFood_CultureType: it.CultureTest.Title,
+                            MyFood_CultureDate: it.MyFood_CultureDate,
+                            MyFood_ZipGrowID: it.MyFood_ZipGrowID,
+                            MyFood_zipGrowType: it.MyFood_zipGrowType,
+                            MyFood_thumbnail : typeCultureData.filter(i => i.id === it.CultureTestId)[0]!= null
+                            ?typeCultureData.filter(i => i.id === it.CultureTestId)[0].thumbnail : '',
+                        };
+
+                        resultArray.push(res);
+                    });
+
+                    return Promise.resolve(resultArray);
+
+                    });
+        });
+    }
+
+    public async GetDataForGrowingType(user: string, archive: boolean, growingType: string): Promise<any[]> {
+        let typeCultureData = new Array<any>();
+        let resultArray = new Array<any>();
+
+         //get all cuture types used after to map and get MyFood_thumbnail parameters (cannot expand Image type filed from lookup) 
+         return await sp.web.lists.getByTitle("Types de Cultures").items
+         .select("Id","MyFood_thumbnail")
+         .orderBy("Title",true)
+         .usingCaching()
+         .get().then((data: any) => {
+             data.map((item, idx)=> {
+                 let result: any = {
+                     id: item.Id,
+                     thumbnail: item.MyFood_thumbnail != null ? item.MyFood_thumbnail.Url : ''
+                 };
+                 typeCultureData.push(result);
+             });
+
+             return sp.web.lists.getByTitle("Suivi").items
+                .select("MyFood_CultureDate","MyFood_zipGrowType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
+                .expand("CultureTest")
+                .filter(`Author eq ${user} and MyFood_SerreType eq '${growingType}' and InProduction eq ${!archive ? 1 : 0}`)
                 .orderBy("MyFood_CultureDate", true).get().then((d: any) => {
                     d.map((it) => {
                         let res: any = {

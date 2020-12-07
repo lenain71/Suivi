@@ -55,7 +55,7 @@ export default class NewEditData extends React.Component<IGestionCultureProps, I
                     id={Number(this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId)}
                     formType={this.props.formType}
                     spHttpClient={this.props.httpClientContext}
-                    webpartContext={this.props.webpartContext}
+                    context={this.props.webpartContext}
                     description={this.props.description}
                     fields={this.props.fields}
                     showUnsupportedFields={this.props.showUnsupportedFields}

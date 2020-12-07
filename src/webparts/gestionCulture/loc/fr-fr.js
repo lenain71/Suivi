@@ -5,9 +5,9 @@ define([], function() {
     "Loading": "Chargement...",
     "GenericErrorMessage": "Une erreur s'est produite, veuillez contacter l'administrateur.",
     "HomeNav":"Accueil",
-    "SemisNav": "Gestion des semis",
-    "NewEditNav": "Gestion des cultures",
-    "ArchiveNav": "Archives des cultures",
+    "SemisNav": "Semis",
+    "NewEditNav": "Cultures",
+    "ArchiveNav": "Archives",
     'PropertyPaneDescription': 'Configurez le formulaire de la liste ici. Une fois la liste configurée, les champs peuvent être déplacés, insérés et supprimés dans le contenu du webpart.',
     'BasicGroupName': 'Paramètres',
     'TitleFieldLabel': 'Titre',
@@ -32,6 +32,8 @@ define([], function() {
     'RecolteDialogPoid' : 'Poid de récolte (kg)',
     'RecolteDialogComment': 'Commentaire de récolte',
     'GoToDialogTitle': 'Basculter en culture',
-    'GoToDialogSelect': 'Selectionner un emplacement'
+    'GoToDialogSelect': 'Selectionner un emplacement',
+    'GrowingTypeText': 'Culture en : ',
+    'serreTypeTitle' : 'Selectionner votre configuration'
   }
 });

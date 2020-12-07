@@ -6,7 +6,7 @@ import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackIt
       Button, ISize, IDocumentCardPreviewProps, ImageFit,
        DocumentCard, DocumentCardType, DocumentCardPreview,
         DocumentCardLocation, DocumentCardDetails, DocumentCardTitle,
-         DocumentCardActivity, DocumentCardActions, SearchBox } from "office-ui-fabric-react";
+         DocumentCardActivity, DocumentCardActions, SearchBox, ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -33,6 +33,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         selectionRedirect: false,
         newRedirect: false,
         selectedItem: null,
+        growingType: null,
         isError: false,
         isLoaded: false
       };
@@ -40,6 +41,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
       this.initialItems = this.state.items;
       this.redirectToNew = this.redirectToNew.bind(this);
       this.loadData = this.loadData.bind(this);
+      this.selectGrowingType = this.selectGrowingType.bind(this);
     }
 
     public componentDidMount() : void {
@@ -89,6 +91,12 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                         <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
                     }
                     <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                </StackItem>
+                <StackItem>
+                    {this.state.growingType != null && 
+                        <ChoiceGroup label={strings.GrowingTypeText} defaultSelectedKey="Tous" options={this.state.growingType}
+                            onChange={this.selectGrowingType} />
+                    }
                 </StackItem>
                 <StackItem>
                     <SearchBox placeholder={strings.SearchPlaceHolder} value={this.state.searchValue} iconProps={{iconName: 'Filter'}} 
@@ -170,16 +178,60 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         let promises = [];
 
         let items: any[];
+        let growingTypes: any[];
         let config: any[];
 
         promises.push(
+            //information from HUB
             this.props.myfoodHubService.getInformationFromHub(this.props.webpartContext.pageContext.user.email).then(val => {
                 config = val;
             }),
+            //information suivi
             this.props.suiviService.GetAllData(this.props.webpartContext.pageContext.legacyPageContext["userId"],
                  this.props.archiveMode).then(val => {
                 items = val;
                 this.setState({items: val, isLoaded: true} );
+            }),
+            //information type de serre
+            this.props.suiviService.GetGrowingType().then(data => {
+                growingTypes = data;
+                let groups: IChoiceGroupOption[] = [];
+
+                data.map(val => {
+                    let iconName: string;
+
+                    switch(val) {
+                        case 'City':
+                        case 'Familly':
+                            iconName = 'ChartSeries';
+                        break;
+
+                        case 'Aerospring':
+                            iconName ='Precipitation';
+                        break;
+
+                        case 'Autre':
+                            iconName='RectangleShape';
+                        break;
+                    }
+
+                    groups.push(
+                        {
+                            key: val,
+                            iconProps: { iconName: iconName },
+                            text: val, // This text is long to show text wrapping.
+                        }
+                    );
+                });
+                
+                //add other group
+                groups.push({
+                    key: 'Tous',
+                    iconProps: { iconName: 'AllApps' },
+                    text: 'Tous', // This text is long to show text wrapping.
+                });
+
+                this.setState({growingType: groups});
             })
           );
           
@@ -202,12 +254,23 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
     }
 
     private filterData(filter: string) : void {
+        this.setState({isLoaded: false});
         this.props.suiviService.getDataForZipGrow(this.props.webpartContext.pageContext.legacyPageContext["userId"],
             this.props.archiveMode,filter).then(val => {
             this.setState({items: val, isLoaded: true} );
         }).catch((error) => {
             this.setState({isError: true, isLoaded: true, errors: [...this.state.errors, error]});
         });
+    }
+
+    private filterByType(filter: string) : void {
+        this.setState({isLoaded: false});
+        this.props.suiviService.GetDataForGrowingType(this.props.webpartContext.pageContext.legacyPageContext["userId"],
+            this.props.archiveMode,filter).then(val => {
+                this.setState({items: val, isLoaded: true} );
+            }).catch((error) => {
+                this.setState({isError: true, isLoaded: true, errors: [...this.state.errors,error]});
+            });
     }
 
     //fonction calback de redirection/routing utilisé par les composants enfants
@@ -249,6 +312,16 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         }
         else if(error.return =='NOK') {
             this.setState({isLoaded: true, errors: [...this.state.errors, error.error]});
+        }
+    }
+
+    private selectGrowingType(event: React.FormEvent<HTMLDivElement>, item: IChoiceGroupOption) : void {
+        if(item && item.key != 'Tous')
+        {
+            this.filterByType(item.key.toString());
+        }
+        else {
+            this.loadData();
         }
     }
 

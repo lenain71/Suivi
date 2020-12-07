@@ -30,6 +30,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
         newRedirect: false,
         selectedItem: null,
         isError: false,
+        growingType: null,
         isLoaded: false
       };
 

@@ -100,6 +100,7 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
         configuration: null,
         newRedirect: false,
         selectedItem: null,
+        growingType: null,
         isError: false,
         isLoaded: false
       };

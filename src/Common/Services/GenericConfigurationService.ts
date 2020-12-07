@@ -14,7 +14,9 @@ export default class GenericConfigurationService implements IGenericConfiguratio
     }
 
     public getConfiguration(): Promise<GenericConfiguration> {
-        return  sp.web.lists.getByTitle("Configurations").items.select("MyFood_HubServiceUrl", "MyFood_HubImageUrl").getById(1).get().then((data: any) => {
+        return  sp.web.lists.getByTitle("Configurations").items.select("MyFood_HubServiceUrl", "MyFood_HubImageUrl").getById(1)
+        .usingCaching()
+        .get().then((data: any) => {
             let result: GenericConfiguration = {
                 MyFood_HubServiceUrl: data.MyFood_HubServiceUrl,
                 MyFood_HubImageUrl: data.MyFood_HubImageUrl,

@@ -4,9 +4,9 @@ define([], function() {
     "Loading": "Loading...",
     "GenericErrorMessage": "An error occured, please contact administrator.",
     "HomeNav":"Home",
-    "SemisNav": "Semis Management",
-    "NewEditNav": "Farming Management",
-    "ArchiveNav": "Archive Farming",
+    "SemisNav": "Semis",
+    "NewEditNav": "Farming",
+    "ArchiveNav": "Archive",
     'BasicGroupName': 'Paramètres',
     'TitleFieldLabel': 'Titre',
     'DescriptionFieldLabel': 'Description',
@@ -30,6 +30,8 @@ define([], function() {
     'RecolteDialogPoid' : 'harvest weight (kg)',
     'RecolteDialogComment': 'harvest comment',
     'GoToDialogTitle': 'Go to zipGrow',
-    'GoToDialogSelect': 'Select zipGrow'
+    'GoToDialogSelect': 'Select zipGrow',
+    'GrowingTypeText': 'Growing in: ',
+    'serreTypeTitle' : 'Select your configuration'
   }
 });
