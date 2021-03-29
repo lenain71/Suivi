@@ -3,15 +3,15 @@
   "solution": {
     "name": "my-food-suivi-culture-client-side-solution",
     "id": "cc4a2b89-48c1-4a6c-85f3-b950fd531b9c",
-    "version": "1.0.6.0",
+    "version": "1.1.0.11",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "developer": {
       "name": "DELARCHE Charly",
-      "websiteUrl": "https://https://myfood.eu/fr",
-      "privacyUrl": "https://https://myfood.eu/fr",
-      "termsOfUseUrl": "https://https://myfood.eu/fr",
+      "websiteUrl": "https://myfood.eu/fr",
+      "privacyUrl": "https://myfood.eu/fr",
+      "termsOfUseUrl": "https://myfood.eu/fr",
       "mpnId": ""
     }
   },

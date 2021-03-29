@@ -94,7 +94,7 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
 
         //intitialisation state composant.
     this.state = {
-        errors: [],
+        error: '',
         items: [],
         selectionRedirect: false,
         configuration: null,
@@ -172,7 +172,7 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
           this.props.archiveMode).then(val => {
             this.setState({items: val, isLoaded: true} );
         }).catch((error) => {
-            this.setState({isError: true, isLoaded: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
     }
 
@@ -181,7 +181,7 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
           this.props.archiveMode,filter).then(val => {
             this.setState({items: val, isLoaded: true} );
         }).catch((error) => {
-            this.setState({isError: true, isLoaded: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
     }
 
@@ -200,7 +200,7 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
         this.props.suiviService.DeleteData(id).then(() => {
             this.loadData();
         }).catch((error) => {
-            this.setState({isError: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, error: error.toString()});
         });
     }
 
@@ -209,7 +209,7 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
             this.loadData();
         }
         else {
-            this.setState({isLoaded: true, errors: [...this.state.errors, error.error]});
+            this.setState({isLoaded: true, error: error.error});
         }
     }
 
@@ -223,24 +223,24 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
     }
 
     private renderErrors() {
-        if(this.state.errors.length > 0)
+        if(this.state.isError)
         {
-            return <div>
-            {
-                this.state.errors.map( (item, idx) =>
+            return(
+              <div>
                     <MessageBar
                     messageBarType={ MessageBarType.error }
                     isMultiline={ true }
-                    onDismiss={ (ev) => this.clearError(idx) }>{item}</MessageBar>
-                )
-            }
-            </div>;
+                    onDismiss={ (ev) => this.clearError() }>{this.state.error}</MessageBar>
+                
+            
+            </div>
+            );
         }
     }
 
-    private clearError(idx: number) {
+    private clearError() {
         this.setState( (prevState, props) => {
-          return {...prevState, errors: prevState.errors.splice( idx, 1 )};
+          return {...prevState, error: '', isError: false};
         } );
     }
 }

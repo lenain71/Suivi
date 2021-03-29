@@ -2,6 +2,7 @@ import { IMyFoodHubService } from "../Contracts/IMyFoodHubService";
 import MyFoodHubConfiguration from "../Entities/MyFoodHubConfiguration";
 import { SPHttpClient, IHttpClientOptions, SPHttpClientResponse } from '@microsoft/sp-http';
 import GenericConfiguration from "../Entities/GenericConfiguration";
+import handleError from "../ErrorHandling/handleError";
 
 export default class MyFoodHubService implements IMyFoodHubService
 {
@@ -33,6 +34,10 @@ export default class MyFoodHubService implements IMyFoodHubService
                                 result.push(conf);
                             });
                             return Promise.resolve(result) ;
+                        })
+                        .catch((error) => {
+                            handleError(error);
+                            return Promise.reject(error);
                         }); 
                     
                     }

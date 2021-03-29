@@ -3,6 +3,7 @@ define([], function() {
     "PropertyPaneDescription": "Configurez le formulaire de la liste ici. Une fois la liste configurée, les champs peuvent être déplacés, insérés et supprimés dans le contenu du webpart",
     "Loading": "Loading...",
     "GenericErrorMessage": "An error occured, please contact administrator.",
+    "HubErrorMessage": "MyFood Hub configuration are unavailable !",
     "HomeNav":"Home",
     "SemisNav": "Semis",
     "NewEditNav": "Farming",

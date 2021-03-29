@@ -1,6 +1,7 @@
 import { Text } from '@microsoft/sp-core-library';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { IListService } from '../Contracts/IListService';
+import handleError from '../ErrorHandling/handleError';
 
 
 
@@ -23,12 +24,12 @@ export class ListService implements IListService {
                             });
                         resolve( listTitles.sort( (a, b) => a.title.localeCompare(b.title)) );
                     })
-                    .catch((error) => { reject(error); });
+                    .catch((error) => { handleError(error); reject(error); });
                 } else {
                     reject(response);
                 }
             })
-            .catch((error) => { reject(error); });
+            .catch((error) => { handleError(error); reject(error); });
         });
     }
 

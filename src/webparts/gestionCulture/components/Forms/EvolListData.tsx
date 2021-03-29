@@ -2,11 +2,11 @@ import * as React from "react";
 import { Redirect } from 'react-router-dom';
 import { GridLayout } from "@pnp/spfx-controls-react/lib/GridLayout";
 import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem,
-     IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone,
+     PrimaryButton,
       Button, ISize, IDocumentCardPreviewProps, ImageFit,
        DocumentCard, DocumentCardType, DocumentCardPreview,
         DocumentCardLocation, DocumentCardDetails, DocumentCardTitle,
-         DocumentCardActivity, DocumentCardActions, SearchBox, ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react";
+         DocumentCardActivity, DocumentCardActions, SearchBox, ChoiceGroup, IChoiceGroupOption, Label } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -16,6 +16,7 @@ import * as strings from "GestionCultureWebPartStrings";
 import CreationRecolteDialog from "../Dialogs/RecolteDialog";
 import * as moment from "moment";
 import ResumeConfiguration from "../Common/ResumeConfiguration";
+import { ConfigureRenderer } from "../Common/ConfigureRenderer";
 
 
 export default class EvolListData extends React.Component<IListDataProps, IListDataStates> {
@@ -28,7 +29,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         //intitialisation state composant.
     this.state = {
         configuration: null,
-        errors: [],
+        error: '',
         items: [],
         selectionRedirect: false,
         newRedirect: false,
@@ -79,13 +80,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                 <StackItem>
                     <ZipGrowMap setFiltering={this.filtering}/>
                 </StackItem>
-                <StackItem>
-                    {this.state.configuration != null && 
-                        <ResumeConfiguration webpartContext={this.props.webpartContext} 
-                            dataContext={this.state.configuration}
-                            myfoodhub_ImageUrl={this.props.configuration.MyFood_HubImageUrl} />
-                    }
-                </StackItem>
+                { this.renderConfiguration() } 
                 <StackItem>
                     {!this.props.archiveMode &&
                         <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
@@ -104,9 +99,10 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                     onChange={(newValue) => this.SearchData(newValue)}
                     onSearch={(newValue) => this.SearchData(newValue)} />
                 </StackItem>
-                <StackItem>
+                <StackItem>           
+                    <Label>{this.state.items.length} plantation en cours</Label>
                     <GridLayout
-                        ariaLabel="List of content, use right and left arrow keys to navigate, arrow down to access details."
+                        ariaLabel=""
                         items={this.state.items}
                         onRenderGridItem={(item: any, finalSize: ISize, isCompact: boolean) => this._onRenderGridItem(item, finalSize, isCompact)}
                     />
@@ -155,7 +151,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
           <DocumentCard type={isCompact ? DocumentCardType.compact : DocumentCardType.normal}>
             <DocumentCardPreview {...previewProps} />
             {!isCompact && <DocumentCardLocation 
-                location={ `Tour n° : ${item.MyFood_ZipGrowID} Type : ${item.MyFood_zipGrowType}`}
+                location={ `Tour n° : ${item.MyFood_ZipGrowID != null ? item.MyFood_ZipGrowID : item.MyFood_SerreType} Type : ${item.MyFood_zipGrowType != null ? item.MyFood_zipGrowType : ''}`}
                 onClick={()=> this.filterData(item.MyFood_ZipGrowID)} />}
             <DocumentCardDetails>
               <DocumentCardTitle
@@ -174,11 +170,8 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
       }
 
     private loadData() : void {
-
         let promises = [];
-
         let items: any[];
-        let growingTypes: any[];
         let config: any[];
 
         promises.push(
@@ -194,7 +187,6 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
             }),
             //information type de serre
             this.props.suiviService.GetGrowingType().then(data => {
-                growingTypes = data;
                 let groups: IChoiceGroupOption[] = [];
 
                 data.map(val => {
@@ -210,7 +202,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                             iconName ='Precipitation';
                         break;
 
-                        case 'Autre':
+                        case 'Bac Perma':
                             iconName='RectangleShape';
                         break;
                     }
@@ -239,14 +231,16 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
               this.initialItems = items;
               this.setState({items: items, isLoaded: true, configuration: config.length != 0 ? config[0] : null});
           }).catch((error) => {
-            this.setState({isError: true, isLoaded: true, errors: [...this.state.errors,error]});
+            this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
     }
 
     private SearchData(value) : void {
 
         if(value != null && value != '') {
-            this.setState({items: this.state.items.filter(item => item.MyFood_CultureType.toLowerCase().startsWith(value.toLowerCase()))});
+            this.setState({items: this.state.items.filter(item => 
+                item.MyFood_CultureType.toLowerCase().startsWith(value.toLowerCase() || 
+                item.MyFood_ZipGrowID == value))});
         }
         else {
             this.setState({items: this.initialItems});
@@ -259,7 +253,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
             this.props.archiveMode,filter).then(val => {
             this.setState({items: val, isLoaded: true} );
         }).catch((error) => {
-            this.setState({isError: true, isLoaded: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
     }
 
@@ -269,7 +263,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
             this.props.archiveMode,filter).then(val => {
                 this.setState({items: val, isLoaded: true} );
             }).catch((error) => {
-                this.setState({isError: true, isLoaded: true, errors: [...this.state.errors,error]});
+                this.setState({isError: true, isLoaded: true, error: error.toString()});
             });
     }
 
@@ -288,7 +282,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         this.props.suiviService.DeleteData(id).then(() => {
             this.loadData();
         }).catch((error) => {
-            this.setState({isError: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, error: error.toString()});
         });
     }
 
@@ -299,10 +293,10 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                 this.loadData();
             }
             else if(dialog.result.status == 'NOK') {
-                this.setState({isLoaded: true, errors: [...this.state.errors,dialog.result.error]});
+                this.setState({isLoaded: true, error: dialog.result.error});
             }
         }).catch((error) => {
-            this.setState({isLoaded: true, errors: [...this.state.errors,error]});
+            this.setState({isLoaded: true, error: error.toString()});
         });
     }
 
@@ -311,7 +305,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
             this.loadData();
         }
         else if(error.return =='NOK') {
-            this.setState({isLoaded: true, errors: [...this.state.errors, error.error]});
+            this.setState({isLoaded: true, error: error.error});
         }
     }
 
@@ -335,24 +329,40 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
     }
 
     private renderErrors() {
-        if(this.state.errors.length > 0)
+        if(this.state.isError)
         {
-            return <div>
-            {
-                this.state.errors.map( (item, idx) =>
-                    <MessageBar
+            return( 
+            <div>
+             <MessageBar
                     messageBarType={ MessageBarType.error }
                     isMultiline={ true }
-                    onDismiss={ (ev) => this.clearError(idx) }>{item}</MessageBar>
-                )
-            }
-            </div>;
+                    onDismiss={ (ev) => this.clearError()}>{this.state.error}</MessageBar>
+            </div>
+            );
         }
     }
 
-    private clearError(idx: number) {
+    private renderConfiguration() {
+        if(this.state.configuration != null) {
+            return (
+                <StackItem>
+                     <ResumeConfiguration webpartContext={this.props.webpartContext} 
+                        dataContext={this.state.configuration}
+                        myfoodhub_ImageUrl={this.props.configuration.MyFood_HubImageUrl} />
+                </StackItem>
+           ); 
+        }
+        else {
+            return (
+                <StackItem>
+                    <ConfigureRenderer />
+                </StackItem>);
+        }
+    }
+
+    private clearError() {
         this.setState( (prevState, props) => {
-          return {...prevState, errors: prevState.errors.splice( idx, 1 )};
+          return {...prevState, error: '', isError: false};
         } );
     }
 }

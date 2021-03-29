@@ -6,6 +6,7 @@ import "@pnp/sp/items";
 import { IGenericConfigurationServices } from "../Contracts/IGenericConfigurationServices";
 import GenericConfiguration from "../Entities/GenericConfiguration";
 import MyFoodHubConfiguration from "../Entities/MyFoodHubConfiguration";
+import handleError from "../ErrorHandling/handleError";
 
 export default class GenericConfigurationService implements IGenericConfigurationServices {
     
@@ -25,6 +26,7 @@ export default class GenericConfigurationService implements IGenericConfiguratio
 
             return Promise.resolve(result);
         }).catch((error) => {
+            handleError(error);
             return Promise.reject(error);
         });
     }

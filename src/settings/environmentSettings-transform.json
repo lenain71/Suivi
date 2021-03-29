@@ -1,0 +1,46 @@
+{
+  "environments": [
+    {
+      "environment": "default",
+      "properties": {
+        "id": "cc4a2b89-48c1-4a6c-85f3-b950fd531b9c",
+        "name": "my-food-suivi-culture-client-side-solution",
+        "zip": "solution/my-food-suivi-culture.sppkg",
+        "entries": [
+          {
+            "id": "b35faf37-361f-4aa9-9bb8-c0618411f470",
+            "location": "./src/webparts/gestionCulture/GestionCultureWebPart.manifest.json"
+          }
+        ]
+      }
+    },
+    {
+      "environment": "dev",
+      "properties": {
+        "id": "40e37631-5d1d-476e-b57a-472501aa7c9c",
+        "name": "DEV-my-food-suivi-culture-client-side-solution",
+        "zip": "solution/my-food-suivi-culture-DEV.sppkg",
+        "entries": [
+          {
+            "id": "c012c5d7-6fa6-4684-8696-4679c4b290c0",
+            "location": "./src/webparts/gestionCulture/GestionCultureWebPart.manifest.json"
+          }
+        ]
+      }
+    },
+    {
+      "environment": "prod",
+      "properties": {
+        "id": "cc4a2b89-48c1-4a6c-85f3-b950fd531b9c",
+        "name": "my-food-suivi-culture-client-side-solution",
+        "zip": "solution/my-food-suivi-culture.sppkg",
+        "entries": [
+          {
+            "id": "b35faf37-361f-4aa9-9bb8-c0618411f470",
+            "location": "./src/webparts/gestionCulture/GestionCultureWebPart.manifest.json"
+          }
+        ]
+      }
+    }
+  ]
+}

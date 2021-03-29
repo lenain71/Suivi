@@ -29,6 +29,8 @@ import { IGenericConfigurationServices } from '../../Common/Contracts/IGenericCo
 import GenericConfigurationService from '../../Common/Services/GenericConfigurationService';
 import { ISemisService } from '../../Common/Contracts/ISemisService';
 import { SemisService } from '../../Common/Services/SemisService';
+import { IGraphDataService } from '../../Common/Contracts/IGraphDataService';
+import GraphDataService from '../../Common/Services/GraphDataService';
 
 export interface IGestionCultureWebPartProps {
   
@@ -40,6 +42,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
   private suiviService: ISuiviService;
   private semisService: ISemisService;
   private myfoodHubService: IMyFoodHubService;
+  private graphService: IGraphDataService;
   private configService: IGenericConfigurationServices;
   private cachedLists = null;
 
@@ -55,6 +58,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
       this.listService = new ListService(this.context.spHttpClient);
       this.suiviService = new SuiviService();
       this.semisService = new SemisService();
+      this.graphService = new GraphDataService();
       
       this.properties.redirectUrl = window.location.href;
     });     
@@ -116,6 +120,7 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
             onUpdateFields: (fields: IFieldConfiguration[]) => this.updateField(fields),
             semisService: this.semisService,
             suiviService: this.suiviService,
+            graphService: this.graphService,
             myfoodHubService: this.myfoodHubService,
             configuration: this.properties.configuration
           });

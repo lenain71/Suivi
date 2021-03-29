@@ -7,6 +7,7 @@ import { IGenericProps } from "../../../Common/IGenericProps";
 import { IMyFoodHubService } from "../../../Common/Contracts/IMyFoodHubService";
 import GenericConfiguration from "../../../Common/Entities/GenericConfiguration";
 import { ISemisService } from "../../../Common/Contracts/ISemisService";
+import { IGraphDataService } from "../../../Common/Contracts/IGraphDataService";
 
 export  class IGestionCultureProps implements IGenericProps {
   public match: any;
@@ -31,5 +32,6 @@ export  class IGestionCultureProps implements IGenericProps {
   public suiviService: ISuiviService;
   public semisService: ISemisService;
   public myfoodHubService: IMyFoodHubService;
+  public graphService: IGraphDataService;
   public configuration: GenericConfiguration;
 }

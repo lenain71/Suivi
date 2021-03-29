@@ -24,7 +24,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
         //intitialisation state composant.
     this.state = {
         configuration: null,
-        errors: [],
+        error: '',
         items: [],
         selectionRedirect: false,
         newRedirect: false,
@@ -184,7 +184,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
             this.initialItems = items;
               this.setState({items: items, isLoaded: true, configuration: config.length != 0 ? config[0] : null});
           }).catch((error) => {
-            this.setState({isError: true, isLoaded: true, errors: [...this.state.errors,error]});
+            this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
     }
 
@@ -203,7 +203,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
             this.props.archiveMode,filter).then(val => {
             this.setState({items: val, isLoaded: true} );
         }).catch((error) => {
-            this.setState({isError: true, isLoaded: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
     }
 
@@ -222,7 +222,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
         this.props.suiviService.DeleteData(id).then(() => {
             this.loadData();
         }).catch((error) => {
-            this.setState({isError: true, errors: [...this.state.errors, error]});
+            this.setState({isError: true, error: error.toString()});
         });
     }
 
@@ -233,10 +233,10 @@ export default class SemisListData extends React.Component<IListDataProps, IList
                 this.loadData();
             }
             else if(dialog.result.status == 'NOK') {
-                this.setState({isLoaded: true, errors: [...this.state.errors,dialog.result.error]});
+                this.setState({isLoaded: true, error: dialog.result.error});
             }
         }).catch((error) => {
-            this.setState({isLoaded: true, errors: [...this.state.errors,error]});
+            this.setState({isLoaded: true, error:error.toString()});
         });
     }
 
@@ -245,7 +245,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
             this.loadData();
         }
         else if(error.return =='NOK') {
-            this.setState({isLoaded: true, errors: [...this.state.errors, error.error]});
+            this.setState({isLoaded: true, error: error.error});
         }
     }
 
@@ -259,24 +259,22 @@ export default class SemisListData extends React.Component<IListDataProps, IList
     }
 
     private renderErrors() {
-        if(this.state.errors.length > 0)
+        if(this.state.isError)
         {
-            return <div>
-            {
-                this.state.errors.map( (item, idx) =>
-                    <MessageBar
-                    messageBarType={ MessageBarType.error }
-                    isMultiline={ true }
-                    onDismiss={ (ev) => this.clearError(idx) }>{item}</MessageBar>
-                )
-            }
-            </div>;
+            return ( <div>
+                <MessageBar
+                messageBarType={ MessageBarType.error }
+                isMultiline={ true }
+                onDismiss={ (ev) => this.clearError() }>{this.state.error}</MessageBar>
+         
+        
+        </div>);
         }
     }
 
-    private clearError(idx: number) {
+    private clearError() {
         this.setState( (prevState, props) => {
-          return {...prevState, errors: prevState.errors.splice( idx, 1 )};
+          return {...prevState, error: '', isError: false};
         } );
     }
 }

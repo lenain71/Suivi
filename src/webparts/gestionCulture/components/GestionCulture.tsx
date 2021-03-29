@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Stack, StackItem, Layer, Spinner, SpinnerSize, Pivot, PivotLinkFormat, PivotLinkSize, PivotItem, Label, MessageBar, MessageBarType } from 'office-ui-fabric-react';
-import {BrowserRouter, Router, Route, Switch, HashRouter, Redirect } from 'react-router-dom';
-
+import { Stack, StackItem, Layer, Spinner, SpinnerSize, Pivot, PivotLinkFormat, PivotLinkSize, PivotItem, Label, MessageBar, MessageBarType, Link } from 'office-ui-fabric-react';
+import {BrowserRouter, Router, Route, Switch, HashRouter, Redirect, Link as RouterLink } from 'react-router-dom';
+import { LoadingComponent } from './Common/LoadingComponent';
 import { IGestionCultureProps } from './IGestionCultureProps';
 import { IGestionCultureStates } from './IGestionCultureStates';
 import { escape } from '@microsoft/sp-lodash-subset';
@@ -17,8 +17,10 @@ import { ControlMode } from 'neos-generic-components/lib/common/datatypes/Contro
 import Consts from '../../../Common/Constants';
 import SemisListData from './Forms/SemisListData';
 import SemisNewEditData from './Forms/SemisNewEditData';
+import GraphData from './Forms/GraphData';
+import { Thumbs } from 'react-responsive-carousel';
 
-export default class GestionCulture extends React.Component<IGestionCultureProps, IGestionCultureStates> {
+export default class GestionCulture extends  React.Component<IGestionCultureProps, IGestionCultureStates> {
   
   private routes: any;
 
@@ -90,16 +92,17 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
         component: ({match}) => <SemisNewEditData {...this.props} match={match} itemId={this.state.cultureSelected} 
         formType={ControlMode.Display} />
       },
-      /*{
-        path: "/Archive",
-        exact: false,
-        component: () => <ListData {...this.props} archiveMode={true} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
-      },*/
       {
         path: "/Archive",
         sensative: false,
         exact: false,
         component: () => <EvolListData {...this.props} archiveMode={true} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
+      },
+      {
+        path: "/Graph",
+        sensative: false,
+        exact: false,
+        component:() => <GraphData {...this.props} />
       }
     ];
 
@@ -108,10 +111,19 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
       isError: false,
       isLoaded: false
     };
+
+    this.onLinckClick = this.onLinckClick.bind(this);
   }
 
   public componentDidMount() : void {
     this.setState({isLoaded: true});
+  }
+
+  public componentDidCatch(error, errorInfo) {
+    this.setState({isLoaded: false, isError: true});
+
+    //LOG here
+
   }
 
 
@@ -132,19 +144,23 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
               }
 
         <BrowserRouter basename="/sites/MyFoodSuivi/SitePages/MyFood-Suivi.aspx">
-        {/* <HashRouter> */}
+          {/* redirection effectuée par code en gérant un state car ne fonctionne pas directement en utilisant le <Redirect> */}
+        {this.state.routeSelectedUrl &&
+                <Redirect push to={this.state.routeSelectedUrl} />
+            }
         <Pivot aria-label="Links of Large Tabs Pivot Example" 
-          linkFormat={PivotLinkFormat.tabs} 
-          linkSize={PivotLinkSize.large}>
-            <PivotItem headerText={strings.HomeNav} itemKey={strings.HomeNav} itemIcon="Home" itemProp="/">
-              <Redirect to="/" />
-            </PivotItem>
-            <PivotItem headerText={strings.SemisNav} itemKey={strings.SemisNav} itemIcon="Precipitation" itemProp="/Semis">
-              <Redirect to="/Semis" />
-            </PivotItem>
-            <PivotItem headerText={strings.ArchiveNav} itemKey={strings.ArchiveNav} itemIcon="Archive" itemProp="/Archive">
-              <Redirect to="/Archive" />
-            </PivotItem>
+          linkFormat={PivotLinkFormat.tabs}
+          selectedKey={this.state.routeSelectedKey}
+          onLinkClick={this.onLinckClick}
+          linkSize={PivotLinkSize.large}>    
+              <PivotItem headerText={strings.HomeNav} itemKey="home" itemIcon="Home" itemProp="/">
+              </PivotItem>
+              <PivotItem headerText={strings.SemisNav} itemKey="semis" itemIcon="Precipitation" itemProp="/Semis">
+              </PivotItem>
+              <PivotItem headerText={strings.ArchiveNav} itemKey="archive" itemIcon="Archive" itemProp="/Archive">
+              </PivotItem>
+              {/* <PivotItem headerText="Graph" itemKey="graph" itemIcon="FunnelChart" itemProp="/Graph">
+              </PivotItem> */}
         </Pivot>
         <Stack tokens={Consts.verticalGapStackTokens}>
           <StackItem>
@@ -165,6 +181,11 @@ export default class GestionCulture extends React.Component<IGestionCultureProps
    */
   private _dismissMessageBar = () => {
     this.setState({ isError: false });
+  }
+
+  private onLinckClick(item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) {
+    //on définit le state interne pour la redirection : utiliser surtout lors d'un appel direct avec l'url dans la barre d'adresse
+    this.setState({routeSelectedKey : item.props.itemKey, routeSelectedUrl: item.props.itemProp});
   }
 
   //call back d'update de la selection 

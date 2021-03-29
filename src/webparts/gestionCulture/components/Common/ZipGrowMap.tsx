@@ -5,16 +5,18 @@ import { IZipGrowStates } from "./IZipGrowStates";
 import { IZipGrowProps } from "./IZipGrowProps";
 import { PnPClientStorage } from "@pnp/common";
 import * as strings from "GestionCultureWebPartStrings";
-import Area from "../../../../Common/Entities/Area";
-import { Dropdown, IDropdownOption, MessageBar, MessageBarType, ThemeSettingName } from "office-ui-fabric-react";
-import { setup } from "@pnp/common";
+import { Dropdown, IDropdownOption, MessageBar, MessageBarType } from "office-ui-fabric-react";
+import { dateAdd } from "@pnp/common";
 
 export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowStates> {
 
     private _AllMap: any;
+    private _pnpStorage: PnPClientStorage;
 
     constructor(props: any) {
         super(props);
+
+        this._pnpStorage = new PnPClientStorage();
 
         this._AllMap = [
             {
@@ -130,8 +132,8 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
 
     private load(): void {
         //vérification de la clé de configuration du type de map
-        const pnpStorage = new PnPClientStorage();
-        const paramTypeMap = pnpStorage.local.get("myfood:map");
+      
+        const paramTypeMap = this._pnpStorage.local.get("myfood:map");
 
         //récupration de la clé et binding en fonction de la configuration
         if(paramTypeMap != null) {
@@ -147,13 +149,7 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
         if(item)
         {
             //enregistrement de la clé de configuration du type de map
-            const pnpStorage = new PnPClientStorage();
-            var d = new Date();
-            var year = d.getFullYear();
-            var month = d.getMonth();
-            var day = d.getDate();
-            var expirationDate = new Date(year + 1, month, day);
-            pnpStorage.local.put("myfood:map",item.key.toString(), expirationDate);
+            this._pnpStorage.local.put("myfood:map",item.key.toString(), dateAdd(new Date(),'year',1));
 
             this.load();
         }

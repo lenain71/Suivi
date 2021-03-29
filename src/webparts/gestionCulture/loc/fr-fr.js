@@ -4,6 +4,7 @@ define([], function() {
     "DescriptionFieldLabel": "Champs Description",
     "Loading": "Chargement...",
     "GenericErrorMessage": "Une erreur s'est produite, veuillez contacter l'administrateur.",
+    "HubErrorMessage": "La configuration provenant de MyFood ne semble pas disponible !",
     "HomeNav":"Accueil",
     "SemisNav": "Semis",
     "NewEditNav": "Cultures",

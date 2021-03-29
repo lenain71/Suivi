@@ -1,0 +1,11 @@
+{
+  "id": "cc4a2b89-48c1-4a6c-85f3-b950fd531b9c",
+  "name": "my-food-suivi-culture-client-side-solution",
+  "zip": "solution/my-food-suivi-culture.sppkg",
+  "entries": [
+    {
+      "id": "b35faf37-361f-4aa9-9bb8-c0618411f470",
+      "location": "./src/webparts/gestionCulture/GestionCultureWebPart.manifest.json"
+    }
+  ]
+}

@@ -22,10 +22,8 @@ export default class QRCodeRenderer extends React.Component<IQRCodeProps, IQRCod
                 quality: 0.5  
             }
         };  
-
-        let reconstrucUrl = window.location.href.toString() + this.props.identifier;
-
-        QRCode.toDataURL(reconstrucUrl, opts).then(url => {
+        
+        QRCode.toDataURL(window.location.href.toString(), opts).then(url => {
             
             this.setState({imageGenerated: url});
         }); 

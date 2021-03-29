@@ -1,6 +1,7 @@
 declare interface IGestionCultureWebPartStrings {
   Loading: string;
   GenericErrorMessage: string;
+  HubErrorMessage: string;
   HomeNav: string;
   SemisNav: string;
   NewEditNav: string;
