@@ -40,7 +40,7 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
                 ]
             },
             {
-                type:"familly",
+                type:"famillyOld",
                 name: "myfood-familly-map",
                 imageUrl:"https://neosideadesign.sharepoint.com/sites/MyFoodSuivi/SiteAssets/Familly.png",
                 width: null,
@@ -71,8 +71,45 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
                 { name: "23", shape: "rect", coords: [381,350,430,400], FillColor: "red" },
                 { name: "24", shape: "rect", coords: [379,430,430,480], FillColor: "red" }
                 ]
+            },
+            {
+                type:"familly",
+                name: "myfood-familly-map",
+                imageUrl:"https://neosideadesign.sharepoint.com/sites/MyFoodSuivi/SiteAssets/FamillyNew.png",
+                width: null,
+                imageWidth: null,
+                areas: [
+                    {name:"1", coords:[21,28,82,89], shape:"rect", FillColor: "red"},
+                    {name:"2", coords:[22,111,82,172], shape:"rect", FillColor: "red"},
+                    {name:"3", coords:[20,191,80,252], shape:"rect", FillColor: "red"},
+                    {name:"4", coords:[21,273,82,333], shape:"rect", FillColor: "red"},
+                    {name:"5", coords:[103,28,162,90], shape:"rect", FillColor: "red"},
+                    {name:"6", coords:[103,111,161,171], shape:"rect", FillColor: "red"},
+                    {name:"7", coords:[104,192,163,253], shape:"rect", FillColor: "red"},
+                    {name:"8", coords:[102,274,163,335], shape:"rect", FillColor: "red"},
+                    {name:"9", coords:[185,27,244,89], shape:"rect", FillColor: "red"},
+                    {name:"10", coords:[182,110,246,171], shape:"rect", FillColor: "red"},
+                    {name:"11", coords:[185,193,246,253], shape:"rect", FillColor: "red"},
+                    {name:"12", coords:[182,272,245,334], shape:"rect", FillColor: "red"},
+                    {name:"13", coords:[312,27,374,89], shape:"rect", FillColor: "red"},
+                    {name:"14", coords:[313,111,373,171], shape:"rect", FillColor: "red"},
+                    {name:"15", coords:[313,192,372,253], shape:"rect", FillColor: "red"},
+                    {name:"16", coords:[311,274,373,335], shape:"rect", FillColor: "red"},
+                    {name:"17", coords:[395,27,455,89], shape:"rect", FillColor: "red"},
+                    {name:"18", coords:[395,110,456,171], shape:"rect", FillColor: "red"},
+                    {name:"19", coords:[393,193,455,253], shape:"rect", FillColor: "red"},
+                    {name:"20", coords:[395,272,456,335], shape:"rect", FillColor: "red"},
+                    {name:"21", coords:[476,27,537,90], shape:"rect", FillColor: "red"},
+                    {name:"22", coords:[474,109,538,172], shape:"rect", FillColor: "red"},
+                    {name:"23", coords:[477,192,536,253], shape:"rect", FillColor: "red"},
+                    {name:"24", coords:[476,272,536,334], shape:"rect", FillColor: "red"}
+                ]
             }
         ];
+
+
+
+
 
         this.state = {
             hoveredArea : null,

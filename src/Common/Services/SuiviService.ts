@@ -83,15 +83,35 @@ export class SuiviService implements ISuiviService {
         return await sp.web.lists.getByTitle("Semis").items.getById(Number(itemId))
         .select("MyFood_CultureDate","Id","CultureTestId","CultureTest/Title")
         .expand("CultureTest").get().then((semis) => {
-            return sp.web.lists.getByTitle('Suivi').items.add({
-                Title: semis.CultureTest.Title,
-                MyFood_ZipGrowID: zipGrowID,
-                MyFood_zipGrowType: zipGrowType,
-                MyFood_SerreType: '',
-                CultureTestId: semis.CultureTestId,
-                MyFood_CultureDate: new Date().toJSON(),
-                InProduction: true,
-            }).then(() =>{
+
+            //cas particulier des bac perma/aerospring
+            let _addingData;
+            
+            if((zipGrowID && zipGrowType == "Bac Perma") || (zipGrowID && zipGrowType == "Aerospring") ) {
+                _addingData = {
+                    Title: semis.CultureTest.Title,
+                    MyFood_ZipGrowID: '',
+                    MyFood_zipGrowType: '',
+                    MyFood_SerreType: zipGrowType,
+                    CultureTestId: semis.CultureTestId,
+                    MyFood_CultureDate: new Date().toJSON(),
+                    InProduction: true,
+                };
+            }
+            else
+            {
+                _addingData = {
+                    Title: semis.CultureTest.Title,
+                    MyFood_ZipGrowID: zipGrowID,
+                    MyFood_zipGrowType: zipGrowType,
+                    MyFood_SerreType: '',
+                    CultureTestId: semis.CultureTestId,
+                    MyFood_CultureDate: new Date().toJSON(),
+                    InProduction: true,
+                };
+            }
+
+            return sp.web.lists.getByTitle('Suivi').items.add(_addingData).then(() =>{
                 return sp.web.lists.getByTitle("Semis").items.getById(Number(itemId)).update({
                     InProduction: false
                 });

@@ -151,7 +151,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
           <DocumentCard type={isCompact ? DocumentCardType.compact : DocumentCardType.normal}>
             <DocumentCardPreview {...previewProps} />
             {!isCompact && <DocumentCardLocation 
-                location={ `Tour n° : ${item.MyFood_ZipGrowID != null ? item.MyFood_ZipGrowID : item.MyFood_SerreType} Type : ${item.MyFood_zipGrowType != null ? item.MyFood_zipGrowType : ''}`}
+                location={this.CreateLabel(item)}
                 onClick={()=> this.filterData(item.MyFood_ZipGrowID)} />}
             <DocumentCardDetails>
               <DocumentCardTitle
@@ -167,6 +167,17 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
             <DocumentCardActions actions={documentCardActions}  />
           </DocumentCard>
         </div>;
+      }
+
+      private CreateLabel(item: any) : string {
+          let label: string;
+          if(item.MyFood_ZipGrowID != null) { // cas des tour 
+            label = `Tour n° : ${item.MyFood_ZipGrowID} Type : ${item.MyFood_zipGrowType != null ? item.MyFood_zipGrowType : ''}`;
+          } else {
+              label = `Conteneur : ${item.MyFood_SerreType}`; 
+          }
+
+          return label;  
       }
 
     private loadData() : void {

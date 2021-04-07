@@ -36,6 +36,20 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
                 });
             });
 
+            //ajout du transfert en bac et aerospring
+            result.push({
+              key: 'Bac Perma',
+              value: 'Bac Perma',
+              text: 'Bac Perma'
+            });
+
+            //ajout du transfert en bac et aerospring
+            result.push({
+              key: 'Aerospring',
+              value: 'Aerospring',
+              text: 'Aerospring'
+            });
+
             //distinct
             this.setState({availableZipGrowList: result.filter((value, index, self) => self.map(x => x.key).indexOf(value.key) == index) });
         });
@@ -67,7 +81,11 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
 
         if(item)
         {
+          if(item.key == 'Bac Perma' || item.key == 'Aerospring') { //cas particulier des bac perma/aerosrpring
+            this.setState({isValidSelection: true, zipGrowID: item.key.toString(), zipGrowType: item.text});
+          }else {
             this.setState({isValidSelection: true, zipGrowID: item.key.toString(), zipGrowType: item.text.split(' - ')[1]});
+          }
         }
         else {
             this.setState({isValidSelection: false});
