@@ -27,18 +27,27 @@ export default class GestionCulture extends  React.Component<IGestionCultureProp
   constructor(props: IGestionCultureProps) {
     super(props);
 
+    // this.baseNameRouteUrl = this.props.webpartContext.pageContext.site.serverRequestPath
+    // .replace('/Semis','')
+    // .replace('/Manage','')
+    // .replace('/Archive','')
+    // .replace('/Graph','');
+
+    console.log(this.props.baseNameRouteUrl);
+
     //construction des routes de l'application SPA.
     this.routes = [
-      /*{
-        path: "/",
-        exact: true,
-        component: () => <ListData {...this.props} archiveMode={false} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
-      },*/
       {
         path: "/",
         exact: true,
         sensative: true,
-        component: () => <EvolListData {...this.props} archiveMode={false} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
+        component: ({match}) => <EvolListData {...this.props} archiveMode={false} match={match} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
+      },
+      {
+        path: "/Filter/Data:numero",
+        exact: false,
+        sensative: false,
+        component: ({match}) => <EvolListData {...this.props} archiveMode={false} match={match} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
       },
       {
         path: "/Semis",
@@ -96,7 +105,7 @@ export default class GestionCulture extends  React.Component<IGestionCultureProp
         path: "/Archive",
         sensative: false,
         exact: false,
-        component: () => <EvolListData {...this.props} archiveMode={true} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
+        component: ({match}) => <EvolListData {...this.props} archiveMode={true} match={match} updateSelectedItemId={(id) => this.updateSelectedItemId(id)}  />
       },
       {
         path: "/Graph",
@@ -143,7 +152,8 @@ export default class GestionCulture extends  React.Component<IGestionCultureProp
                 </MessageBar>
               }
 
-        <BrowserRouter basename="/sites/MyFoodSuivi/SitePages/MyFood-Suivi.aspx">
+        {/* <BrowserRouter basename='/sites/TestMyFood/SitePages/Test-MyFood-SUivi.aspx'> */}
+      <BrowserRouter basename={this.props.baseNameRouteUrl}>
           {/* redirection effectuée par code en gérant un state car ne fonctionne pas directement en utilisant le <Redirect> */}
         {this.state.routeSelectedUrl &&
                 <Redirect push to={this.state.routeSelectedUrl} />

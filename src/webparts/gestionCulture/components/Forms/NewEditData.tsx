@@ -78,7 +78,7 @@ export default class NewEditData extends React.Component<IGestionCultureProps, I
                 }
                 </StackItem> */}
                 <StackItem>
-                    <QRCodeRenderer identifier={this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId} absoluteUrl={this.props.absoluteApplicationUrl}></QRCodeRenderer>
+                    <QRCodeRenderer suiviService={this.props.suiviService} itemId={this.props.match.params.id != null ? this.props.match.params.id.split('=')[1] : this.props.itemId} absoluteUrl={this.props.absoluteApplicationUrl}></QRCodeRenderer>
                 </StackItem>
             </Stack>
           </div>

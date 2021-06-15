@@ -15,6 +15,7 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
           itemId: this.props.itemId,
           zipGrowID: null,
           zipGrowType: null,
+          SerreType: null,
           isValidSelection: false,
           availableZipGrowList: []
       };
@@ -32,7 +33,8 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
                 result.push({
                     key: data.MyFood_ZipGrowID,
                     value: data.MyFood_zipGrowType,
-                    text: `${data.MyFood_ZipGrowID} - ${data.MyFood_zipGrowType}`
+                    type: data.MyFood_SerreType,
+                    text: `${data.MyFood_ZipGrowID} - ${data.MyFood_zipGrowType} - ${data.MyFood_SerreType}`
                 });
             });
 
@@ -40,6 +42,7 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
             result.push({
               key: 'Bac Perma',
               value: 'Bac Perma',
+              type: 'Bac Perma',
               text: 'Bac Perma'
             });
 
@@ -47,6 +50,7 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
             result.push({
               key: 'Aerospring',
               value: 'Aerospring',
+              type: 'Aerospring',
               text: 'Aerospring'
             });
 
@@ -77,14 +81,14 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
         );
       }
 
-    private selectZipGrow(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption) : void {
+    private selectZipGrow(event: React.FormEvent<HTMLDivElement>, item: any) : void {
 
         if(item)
         {
           if(item.key == 'Bac Perma' || item.key == 'Aerospring') { //cas particulier des bac perma/aerosrpring
-            this.setState({isValidSelection: true, zipGrowID: item.key.toString(), zipGrowType: item.text});
+            this.setState({isValidSelection: true, zipGrowID: item.key.toString(), zipGrowType: item.text, SerreType: item.type});
           }else {
-            this.setState({isValidSelection: true, zipGrowID: item.key.toString(), zipGrowType: item.text.split(' - ')[1]});
+            this.setState({isValidSelection: true, zipGrowID: item.key.toString(), zipGrowType: item.text.split(' - ')[1], SerreType: item.type});
           }
         }
         else {
@@ -96,7 +100,8 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
       let request: any = {
         id: this.props.itemId,
         zipGrowID: state.zipGrowID,
-        zipGrowType: state.zipGrowType
+        zipGrowType: state.zipGrowType,
+        serreType: state.SerreType
       };
   
       this.props.submit(request);
@@ -144,7 +149,7 @@ class GoToDialogContent extends React.Component<IGoToDialogContentProps, IGoToDi
     private submit(request: any): void {  
         this.result = {status: '', error: ''};
 
-        this.suiviService.TransfertTo(request.id.Id, request.zipGrowID, request.zipGrowType).then(() => {
+        this.suiviService.TransfertTo(request.id.Id, request.zipGrowID, request.zipGrowType, request.serreType).then(() => {
             this.result.status = "OK";
             this.close();
         }).catch((error) => {

@@ -102,7 +102,8 @@ export default class ListData extends React.Component<IListDataProps, IListDataS
         selectedItem: null,
         growingType: null,
         isError: false,
-        isLoaded: false
+        isLoaded: false,
+        FitlterQRMode: false
       };
 
       this.redirect = this.redirect.bind(this);

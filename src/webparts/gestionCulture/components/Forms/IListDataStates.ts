@@ -12,4 +12,5 @@ export class IListDataStates extends IGenericStates {
     public currentFiltering? : string;
     public searchValue?: string;
     public growingType: IChoiceGroupOption[];
+    public FitlterQRMode: boolean;
 }

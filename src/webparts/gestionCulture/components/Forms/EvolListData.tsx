@@ -17,6 +17,7 @@ import CreationRecolteDialog from "../Dialogs/RecolteDialog";
 import * as moment from "moment";
 import ResumeConfiguration from "../Common/ResumeConfiguration";
 import { ConfigureRenderer } from "../Common/ConfigureRenderer";
+import { Item } from "@pnp/sp/items";
 
 
 export default class EvolListData extends React.Component<IListDataProps, IListDataStates> {
@@ -36,8 +37,9 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         selectedItem: null,
         growingType: null,
         isError: false,
-        isLoaded: false
-      };
+        isLoaded: false,
+        FitlterQRMode: false
+    };
 
       this.initialItems = this.state.items;
       this.redirectToNew = this.redirectToNew.bind(this);
@@ -76,23 +78,11 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                 </div>
               </Layer>
             }
-            <Stack tokens={Consts.verticalGapStackTokens}>
-                <StackItem>
-                    <ZipGrowMap setFiltering={this.filtering}/>
-                </StackItem>
-                { this.renderConfiguration() } 
-                <StackItem>
-                    {!this.props.archiveMode &&
-                        <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
-                    }
-                    <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
-                </StackItem>
-                <StackItem>
-                    {this.state.growingType != null && 
-                        <ChoiceGroup label={strings.GrowingTypeText} defaultSelectedKey="Tous" options={this.state.growingType}
-                            onChange={this.selectGrowingType} />
-                    }
-                </StackItem>
+            <Stack tokens={Consts.verticalGapStackTokens}>             
+                {this.renderZipGrowMap()}
+                {this.renderConfiguration()}
+                {this.renderButton()}
+                {this.renderFilter()}
                 <StackItem>
                     <SearchBox placeholder={strings.SearchPlaceHolder} value={this.state.searchValue} iconProps={{iconName: 'Filter'}} 
                     onClear={this.loadData}
@@ -216,6 +206,9 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                         case 'Bac Perma':
                             iconName='RectangleShape';
                         break;
+
+                        case 'Incubateur': 
+                        iconName='Inbox';
                     }
 
                     groups.push(
@@ -240,7 +233,19 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
           
           Promise.all(promises).then(() => {
               this.initialItems = items;
-              this.setState({items: items, isLoaded: true, configuration: config.length != 0 ? config[0] : null});
+
+              //laucnh search by ZipGrowType if available
+              if(this.props.match.params.numero != null) {
+                let num = this.props.match.params.numero.split('=')[1];
+
+                if(num != null) {
+                    this.SearchData(num);
+                    this.setState({isLoaded: true, FitlterQRMode: true, configuration: config.length != 0 ? config[0] : null});
+                }
+              }
+              else {
+                this.setState({items: items, isLoaded: true, FitlterQRMode: false, configuration: config.length != 0 ? config[0] : null});
+              }
           }).catch((error) => {
             this.setState({isError: true, isLoaded: true, error: error.toString()});
         });
@@ -250,8 +255,9 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
 
         if(value != null && value != '') {
             this.setState({items: this.state.items.filter(item => 
-                item.MyFood_CultureType.toLowerCase().startsWith(value.toLowerCase() || 
-                item.MyFood_ZipGrowID == value))});
+                item.MyFood_CultureType.toLowerCase().startsWith(value.toLowerCase()) || 
+                item.MyFood_ZipGrowID == value ||
+                item.MyFood_SerreType == value)});
         }
         else {
             this.setState({items: this.initialItems});
@@ -354,21 +360,57 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
     }
 
     private renderConfiguration() {
-        if(this.state.configuration != null) {
-            return (
-                <StackItem>
-                     <ResumeConfiguration webpartContext={this.props.webpartContext} 
-                        dataContext={this.state.configuration}
-                        myfoodhub_ImageUrl={this.props.configuration.MyFood_HubImageUrl} />
-                </StackItem>
-           ); 
+        if(!this.state.FitlterQRMode) {
+            if(this.state.configuration != null) {
+                return (
+                    <StackItem>
+                        <ResumeConfiguration webpartContext={this.props.webpartContext} 
+                            dataContext={this.state.configuration}
+                            myfoodhub_ImageUrl={this.props.configuration.MyFood_HubImageUrl} />
+                    </StackItem>
+            ); 
+            }
+            else {
+                return (
+                    <StackItem>
+                        <ConfigureRenderer />
+                    </StackItem>);
+            }
         }
-        else {
+    }
+
+    private renderZipGrowMap() {
+        if(!this.state.FitlterQRMode) {
             return (
-                <StackItem>
-                    <ConfigureRenderer />
+                 <StackItem>
+                    <ZipGrowMap setFiltering={this.filtering}/>
                 </StackItem>);
         }
+    }
+
+    private renderButton() {
+        if(!this.state.FitlterQRMode) {
+            return (
+                <StackItem>
+                    {!this.props.archiveMode &&
+                        <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
+                    }
+                    <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                </StackItem>
+            );
+        }
+    } 
+
+    private renderFilter() {
+        if(!this.state.FitlterQRMode) {
+            return ( 
+            <StackItem>
+                {this.state.growingType != null && 
+                    <ChoiceGroup label={strings.GrowingTypeText} defaultSelectedKey="Tous" options={this.state.growingType}
+                        onChange={this.selectGrowingType} />
+                }
+            </StackItem>);
+        } 
     }
 
     private clearError() {

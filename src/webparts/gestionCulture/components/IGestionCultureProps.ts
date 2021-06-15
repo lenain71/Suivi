@@ -15,6 +15,7 @@ export  class IGestionCultureProps implements IGenericProps {
   public description: string;
   public webUrl: string;
   public absoluteApplicationUrl: string;
+  public baseNameRouteUrl: string;
   public listUrl: string;
   public semisListUrl: string;
   public listId: string;

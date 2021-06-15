@@ -38,6 +38,8 @@ export default class GraphData extends React.Component<IGraphDataProps, IGraphDa
 
         console.log(data);
        
+      }).catch((error) => {
+        this.setState({isError: true, isLoaded: true, error: error.toString()});
       });
         return new Promise<Chart.ChartData>((resolve, reject) => {
           // Call your own service -- this example returns an array of numbers

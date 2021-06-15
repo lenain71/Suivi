@@ -1,4 +1,8 @@
+import { ISuiviService } from "../../../../Common/Contracts/ISuiviService";
+
 export interface IQRCodeProps {
-    identifier?: string;
+    itemId: string;
+    suiviService: ISuiviService;
+    //identifier?: string;
     absoluteUrl: string;
 }

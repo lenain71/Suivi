@@ -53,11 +53,11 @@ export default class GraphDataService implements IGraphDataService
            .orderBy("MyFood_zipGrowType", true).get();
     
            //transform data by grouping by MyFood_zipGrowType
-           let transformData = data.reduce((r, data) => {
+           let transformData = data.reduce((r, d) => {
             const {
                 MyFood_zipGrowType,
                 MyFood_ZipGrowID
-              } = data;
+              } = d;
             
               r[MyFood_zipGrowType] = [...r[MyFood_zipGrowType] || [], {
                 MyFood_ZipGrowID
@@ -108,6 +108,7 @@ export default class GraphDataService implements IGraphDataService
             return Promise.resolve(result);   
         } catch (error) {
             handleError(error);
+            return Promise.reject(error);
         }
     }
     public async getGrowingDataHistory(): Promise<Growing> {
@@ -123,7 +124,7 @@ export default class GraphDataService implements IGraphDataService
             return Promise.reject(error);    
         }
     }
-    getGrowingDataByCategory(): Promise<CategoryGraphData> {
+    public getGrowingDataByCategory(): Promise<CategoryGraphData> {
         try {
             throw new Error("Method not implemented.");    
         } catch (error) {
@@ -132,7 +133,7 @@ export default class GraphDataService implements IGraphDataService
         }
         
     }
-    getListsFromWeb(webUrl: string): Promise<{ url: string; title: string; id: string; }[]> {
+    public getListsFromWeb(webUrl: string): Promise<{ url: string; title: string; id: string; }[]> {
         try {
             throw new Error("Method not implemented.");    
         } catch (error) {

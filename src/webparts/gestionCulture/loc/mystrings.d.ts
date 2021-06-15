@@ -10,6 +10,7 @@ declare interface IGestionCultureWebPartStrings {
   BasicGroupName: string;
   TitleFieldLabel: string;
   DescriptionFieldLabel: string;
+  baseNameRouteUrlLabel: string;
   GroupeFieldLabel: string;
   ListFieldLabel: string;
   SemisListFiedLabel: string;

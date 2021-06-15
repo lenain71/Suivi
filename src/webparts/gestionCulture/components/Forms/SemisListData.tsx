@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Redirect } from 'react-router-dom';
 import { GridLayout } from "@pnp/spfx-controls-react/lib/GridLayout";
-import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, Button, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions, SearchBox } from "office-ui-fabric-react";
+import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, Button, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions, SearchBox, Label } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -31,7 +31,8 @@ export default class SemisListData extends React.Component<IListDataProps, IList
         selectedItem: null,
         isError: false,
         growingType: null,
-        isLoaded: false
+        isLoaded: false,
+        FitlterQRMode: false
       };
 
       this.initialItems = this.state.items;
@@ -94,6 +95,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
                     onSearch={(newValue) => this.SearchData(newValue)} />
                 </StackItem>
                 <StackItem>
+                <Label>{this.state.items.length} plantation en cours</Label>
                     <GridLayout
                         ariaLabel="List of content, use right and left arrow keys to navigate, arrow down to access details."
                         items={this.state.items}
@@ -145,7 +147,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
             <DocumentCardPreview {...previewProps} />
             {!isCompact && <DocumentCardLocation 
                 location={ `zone n° : ${item.MyFood_emplacement}`}
-                onClick={()=> this.filterData(item.MyFood_ZipGrowID)} />}
+                onClick={()=> this.filterData(item.MyFood_emplacement)} />}
             <DocumentCardDetails>
               <DocumentCardTitle
                 title={item.MyFood_CultureType}

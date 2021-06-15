@@ -3,7 +3,7 @@
   "solution": {
     "name": "my-food-suivi-culture-client-side-solution",
     "id": "cc4a2b89-48c1-4a6c-85f3-b950fd531b9c",
-    "version": "1.2.0.0",
+    "version": "1.3.0.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

@@ -13,6 +13,7 @@ define([], function() {
     'BasicGroupName': 'Paramètres',
     'TitleFieldLabel': 'Titre',
     'DescriptionFieldLabel': 'Description',
+    'baseNameRouteUrlLabel' : 'baseName RouteUrl',
     'GroupeFieldLabel': 'Groupe de securité',
     'ListFieldLabel': 'Liste suivi',
     'SemisListFiedLabel' : 'Liste semis',

@@ -2,7 +2,7 @@ import * as React from "react";
 import { IQRCodeProps } from "./IQRCodeProps";
 import QRCode from 'qrcode';
 import { IQRCodeStates } from "./IQRCodeStates";
-import { Stack, StackItem, Label } from "office-ui-fabric-react";
+import { Label } from "office-ui-fabric-react";
 
 
 export default class QRCodeRenderer extends React.Component<IQRCodeProps, IQRCodeStates> {
@@ -10,8 +10,11 @@ export default class QRCodeRenderer extends React.Component<IQRCodeProps, IQRCod
         super(props);
 
         this.state = {
-            imageGenerated:null
+            imageGenerated:null,
+            data: null
           };
+
+          this.loadData = this.loadData.bind(this);
     }
 
     public componentDidMount() : void {
@@ -22,17 +25,14 @@ export default class QRCodeRenderer extends React.Component<IQRCodeProps, IQRCod
                 quality: 0.5  
             }
         };  
-        
-        QRCode.toDataURL(window.location.href.toString(), opts).then(url => {
-            
-            this.setState({imageGenerated: url});
-        }); 
+
+        this.loadData();
     }
 
     public render(): React.ReactElement<any> {
         return (
             <div>
-                {this.props.identifier &&
+                {this.props.itemId &&
                 <div>
                     <Label>Lien de suivi de cette culture : </Label>
                     <img src={this.state.imageGenerated} /> 
@@ -41,4 +41,15 @@ export default class QRCodeRenderer extends React.Component<IQRCodeProps, IQRCod
             </div>
         );
     }
+
+    private loadData() {
+        this.props.suiviService.GetSpecificData(this.props.itemId.toString()).then((suivi) => {
+            this.setState({ data: `${this.props.absoluteUrl}/Filter/Data:numero=${suivi}`});
+            
+            QRCode.toDataURL(this.state.data).then(url => {
+            
+                this.setState({imageGenerated: url});
+            }); 
+        });
+     }
 }

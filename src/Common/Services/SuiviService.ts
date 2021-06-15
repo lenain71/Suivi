@@ -42,8 +42,8 @@ export class SuiviService implements ISuiviService {
     public async GetZipGrowList(user: string) : Promise<any[]> {
         try {
             return await sp.web.lists.getByTitle("Suivi").items
-            .select("MyFood_zipGrowType","MyFood_ZipGrowID")
-            .filter(`Author eq ${user}`)
+            .select("MyFood_zipGrowType","MyFood_ZipGrowID","MyFood_SerreType")
+            .filter(`Author eq ${user} and (MyFood_SerreType ne 'Incubateur' and MyFood_SerreType ne 'Aerospring' and MyFood_SerreType ne 'Bac Perma')`)
             .orderBy("MyFood_ZipGrowID", true)
             .usingCaching()
             .get();   
@@ -78,7 +78,7 @@ export class SuiviService implements ISuiviService {
         }
     }
 
-    public async TransfertTo(itemId: string, zipGrowID: string, zipGrowType: string): Promise<IItemAddResult> {
+    public async TransfertTo(itemId: string, zipGrowID: string, zipGrowType: string, serreType: string): Promise<IItemAddResult> {
       try {
         return await sp.web.lists.getByTitle("Semis").items.getById(Number(itemId))
         .select("MyFood_CultureDate","Id","CultureTestId","CultureTest/Title")
@@ -104,7 +104,7 @@ export class SuiviService implements ISuiviService {
                     Title: semis.CultureTest.Title,
                     MyFood_ZipGrowID: zipGrowID,
                     MyFood_zipGrowType: zipGrowType,
-                    MyFood_SerreType: '',
+                    MyFood_SerreType: serreType,
                     CultureTestId: semis.CultureTestId,
                     MyFood_CultureDate: new Date().toJSON(),
                     InProduction: true,
@@ -129,6 +129,28 @@ export class SuiviService implements ISuiviService {
            handleError(error); 
         }
        
+    }
+
+    public async GetSpecificData(itemId: string) : Promise<any> {
+        try {
+            let data = await sp.web.lists.getByTitle("Suivi").items.getById(Number(itemId)).get();
+
+            if(data != null) 
+            {
+                if(data.MyFood_ZipGrowID != null) {
+                    return Promise.resolve(data.MyFood_ZipGrowID);
+                }
+                else {
+                    return Promise.resolve(data.MyFood_SerreType);
+                }
+            }
+            else
+            {
+                return Promise.resolve(null);
+            }
+        } catch (error) {
+            handleError(error);
+        }
     }
 
     public async GetAllData(user: string, archive: boolean) : Promise<any[]> {

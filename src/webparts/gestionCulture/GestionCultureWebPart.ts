@@ -15,7 +15,7 @@ import { IGestionCultureProps } from './components/IGestionCultureProps';
 import { ControlMode } from 'neos-generic-components/lib/common/datatypes/ControlMode';
 import { IFieldConfiguration } from 'neos-generic-components/lib/webparts/detailListForm/components/IFieldConfiguration';
 import { PropertyPaneAsyncDropdown } from 'neos-generic-components/lib/common/controls/PropertyPanelAsyncDropdown/PropertyPaneAsyncDropdown';
-import { IDropdownOption, MessageBar, MessageBarType } from 'office-ui-fabric-react';
+import { IDropdownOption, initializeIcons, MessageBar, MessageBarType } from 'office-ui-fabric-react';
 import { ListService } from '../../Common/Services/ListService';
 import { get, update } from '@microsoft/sp-lodash-subset';
 import { SuiviService } from '../../Common/Services/SuiviService';
@@ -92,8 +92,13 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
     else
     {
 
-      //chargement asynchrone de la configuration
+      //différentiation de chargement de contexte Teams
+      if(this.context.sdks.microsoftTeams) {
+        //corrige l'erreur de chargement des icones OfficeUIFabric
+        initializeIcons();
+      }
 
+      //chargement asynchrone de la configuration
       this.configService.getConfiguration().then((config) => {
         this.properties.configuration = config;
         this.myfoodHubService = new MyFoodHubService(this.context.spHttpClient,this.properties.configuration);
@@ -105,7 +110,8 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
             title: this.properties.title,
             description: this.properties.description,
             webUrl: this.context.pageContext.web.absoluteUrl,
-            absoluteApplicationUrl: window.location.href,
+            absoluteApplicationUrl: `${window.location.href.split('.aspx')[0]}.aspx`,
+            baseNameRouteUrl: this.properties.baseNameRouteUrl,
             listUrl: this.properties.listUrl,
             semisListUrl: this.properties.semisListUrl,
             listId: this.properties.listId,
@@ -154,11 +160,15 @@ export default class GestionCultureWebPart extends BaseClientSideWebPart<IGestio
         groupName: strings.BasicGroupName,
         groupFields: [
           PropertyPaneTextField('title', {
-            label: strings.TitleFieldLabel
+            label: strings.TitleFieldLabel,
           }),
           PropertyPaneTextField('description', {
             label: strings.DescriptionFieldLabel,
             multiline: true
+          }),
+          PropertyPaneTextField('baseNameRouteUrl', {
+            label: strings.baseNameRouteUrlLabel,
+            value: this.properties.baseNameRouteUrl
           }),
          new PropertyPaneAsyncDropdown('listUrl', {
             label: strings.ListFieldLabel,

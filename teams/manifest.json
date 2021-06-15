@@ -1,0 +1,58 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.9",
+    "packageName": "my-food-suivi-culture.Team",
+    "id": "4f2812db-a1e3-4e89-8606-9668447a0f6a",
+    "version": "0.2",
+    "developer": {
+      "name": "DELARCHE Charly",
+      "websiteUrl": "https://myfood.eu/fr",
+      "privacyUrl": "https://myfood.eu/fr",
+      "termsOfUseUrl": "https://myfood.eu/fr"
+    },
+    "name": {
+      "short": "Gestion de culture"
+    },
+    "description": {
+      "short": "Application gestion des cultures des serres MyFood",
+      "full": "Application gestion des cultures des serres MyFood en version Teams"
+    },
+    "icons": {
+      "outline": "b35faf37-361f-4aa9-9bb8-c0618411f470_outline.png",
+      "color": "b35faf37-361f-4aa9-9bb8-c0618411f470_color.png"
+    },
+    "accentColor": "#004578",
+    "configurableTabs": [
+      {
+        "configurationUrl": "https://{teamSiteDomain}{teamSitePath}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest={teamSitePath}/_layouts/15/teamshostedapp.aspx%3FopenPropertyPane=true%26teams%26componentId=b35faf37-361f-4aa9-9bb8-c0618411f470%26forceLocale={locale}",
+        "canUpdateConfiguration": true,
+        "scopes": [
+          "team"
+        ]
+      }
+    ],
+    "staticTabs": [
+        {
+          "entityId": "7e7b4a9c-b468-40ac-ad50-e0fc1731482f",
+          "scopes": [
+            "personal"
+          ],
+          "context":[
+            "personalTab",
+            "channelTab"
+            ],
+          "name": "Gestion de culture",
+          "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=b35faf37-361f-4aa9-9bb8-c0618411f470%26forceLocale={locale}"
+        }
+      ],
+    "validDomains": [
+      "*.login.microsoftonline.com",
+      "*.sharepoint.com",
+      "*.sharepoint-df.com",
+      "spoppe-a.akamaihd.net",
+      "spoprod-a.akamaihd.net",
+      "resourceseng.blob.core.windows.net",
+      "msft.spoppe.com"
+    ]
+  }
+  
