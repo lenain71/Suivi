@@ -169,7 +169,7 @@ export default class GestionCulture extends  React.Component<IGestionCultureProp
               </PivotItem>
               <PivotItem headerText={strings.ArchiveNav} itemKey="archive" itemIcon="Archive" itemProp="/Archive">
               </PivotItem>
-              {/* <PivotItem headerText="Graph" itemKey="graph" itemIcon="FunnelChart" itemProp="/Graph">
+               {/* <PivotItem headerText="Graph" itemKey="graph" itemIcon="FunnelChart" itemProp="/Graph">
               </PivotItem> */}
         </Pivot>
         <Stack tokens={Consts.verticalGapStackTokens}>

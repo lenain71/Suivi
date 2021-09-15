@@ -70,8 +70,8 @@ export default class GraphDataService implements IGraphDataService
             if(transformData.Grande != null) {
                 result.push(
                     { 
-                        AvailableSlot: (8 - transformData.grande.length) * zipgrowGrandeCount,
-                        UsedSlot: transformData.grande.length,
+                        AvailableSlot: (8 - transformData.Grande.length) * zipgrowGrandeCount,
+                        UsedSlot: transformData.Grande.length,
                         Category: "Grande",
                         TotalCount: zipgrowGrandeCount 
                     });

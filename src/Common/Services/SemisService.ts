@@ -109,4 +109,14 @@ export class SemisService implements ISemisService {
             handleError(error);
         }
     }
+
+    public async DeleteData(itemId: string): Promise<void> {
+        try {
+            return await sp.web.lists.getByTitle("Semis").items.getById(Number(itemId)).delete();
+        } catch (error) {
+           handleError(error); 
+        }
+       
+    }
+
 }

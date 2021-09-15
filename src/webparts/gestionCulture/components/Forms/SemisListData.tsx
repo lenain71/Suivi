@@ -221,7 +221,7 @@ export default class SemisListData extends React.Component<IListDataProps, IList
 
     private deleteData = (id: string) : void => {
         this.setState({isLoaded: false});
-        this.props.suiviService.DeleteData(id).then(() => {
+        this.props.semisService.DeleteData(id).then(() => {
             this.loadData();
         }).catch((error) => {
             this.setState({isError: true, error: error.toString()});

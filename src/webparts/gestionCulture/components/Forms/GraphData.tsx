@@ -16,70 +16,103 @@ export default class GraphData extends React.Component<IGraphDataProps, IGraphDa
     this.state = {
         error: '',
         isError: false,
-        isLoaded: false
+        isLoaded: true,
+        charts: null
       };
+
+      this.loadData = this.loadData.bind(this);
     }
 
     public componentDidMount() : void {
-
-       //this.loadData();
-    }
-
-    private loadData(): void {
-        throw new Error("Method not implemented.");
+      this.loadData();
     }
 
     public componentDidUpdate() : void {
     }
 
-    private _loadAsyncData(): Promise<Chart.ChartData> {
 
-       this.props.graphService.getAvailableZipGrowCount(this.props.webpartContext.pageContext.legacyPageContext["userId"]).then((data)=> {
+    private loadData() : void {
+      this.props.graphService.getAvailableZipGrowCount(this.props.webpartContext.pageContext.legacyPageContext["userId"]).then((data)=> {
 
-        console.log(data);
+        let chartData: Chart.ChartData;
+
+        //labels
+        let datalabels = ['Available Slot','Used Slot', 'Total number of ZipGrow'];
+        let datatset: Chart.ChartDataSets[] = [];
+        let obj;
+
+        //datasets
+        data.map((v,i) => {
+          if(i == 0 ) {
+            obj = {
+              label: v.Category,
+              data: [v.AvailableSlot,v.UsedSlot,v.TotalCount],
+              fill: false,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)', // same color for all data elements
+            borderColor: 'rgb(255, 99, 132)', // same color for all data elements
+            borderWidth: 1
+            };
+          }
+          else {
+            obj = {
+              label: v.Category,
+              data: [v.AvailableSlot,v.UsedSlot,v.TotalCount],
+              fill: false,
+            backgroundColor: 'rgba(255, 159, 64, 0.2)', // same color for all data elements
+            borderColor: 'rgb(255, 159, 64)', // same color for all data elements
+            borderWidth: 1
+            };
+          }
+         
+          datatset.push(obj);
+        });
+
+        chartData = {
+          labels: datalabels,
+          datasets: datatset
+        } ;
+
+        this.setState({isError: false, isLoaded: true, charts: chartData});
        
       }).catch((error) => {
         this.setState({isError: true, isLoaded: true, error: error.toString()});
       });
-        return new Promise<Chart.ChartData>((resolve, reject) => {
-          // Call your own service -- this example returns an array of numbers
-          // but you could call
-        //   const dataProvider: IChartDataProvider = new MockChartDataProvider();
-        //   dataProvider.getNumberArray().then((numbers: number[]) => {
-            // format your response to ChartData
-            const data: Chart.ChartData =
-            {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                {
-                  label: 'My First dataset',
-                  data: [8, 12, 14, 18, 25]
-                }
-              ]
-            };
-    
-            // resolve the promise
-            resolve(data);
-          });
-      }
+    }
 
     public render(): React.ReactElement<any> {
+
+       // set the options
+       const options: Chart.ChartOptions = {
+        scales:
+        {
+          yAxes:
+            [
+              {
+                ticks:
+                {
+                  beginAtZero: true
+                }
+              }
+            ]
+        }
+      };
+
         return (
             <div>
               { this.renderErrors() }
-  
               {!this.state.isLoaded &&
-                <Layer>
-                  <div className={styles.loaderRoot}>
-                    <Spinner className={styles.loader} size={SpinnerSize.large} label={strings.Loading} />
-                  </div>
-                </Layer>
-              }
+              <Layer>
+                <div className={styles.loaderRoot}>
+                  <Spinner className={styles.loader} size={SpinnerSize.large} label={strings.Loading} />
+                </div>
+              </Layer>
+            }
               <Stack tokens={Consts.verticalGapStackTokens}>
                   <StackItem>
                   <ChartControl
                         type='bar'
-                        datapromise={this._loadAsyncData()}
+                        data={this.state.charts}
+                        options={options}
                         loadingtemplate={() => <Spinner size={SpinnerSize.large} label={strings.Loading}  />}
                         rejectedtemplate={(error: string) => <div>Something went wrong: {error}</div>}/>
                   </StackItem>
