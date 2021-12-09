@@ -18,5 +18,29 @@ steps:
 - script: |
     npm install
     npm run build
-    gulp bundle --ship
-  displayName: 'npm install build and bundle --ship'
+  displayName: 'npm install build'
+- task: gulp@0
+  inputs:
+    gulpFile: 'gulpfile.js'
+    targets: 'bundle'
+    arguments: '--ship'
+    gulpjs: 'node_modules/gulp/bin/gulp.js'
+    enableCodeCoverage: false
+- task: gulp@0
+  inputs:
+    gulpFile: 'gulpfile.js'
+    targets: 'package-solution'
+    arguments: '--ship'
+    gulpjs: 'node_modules/gulp/bin/gulp.js'
+    enableCodeCoverage: false
+- task: CopyFiles@2
+  inputs:
+    Contents: '**\*.sppkg'
+    TargetFolder: '$(build.artifactstagingdirectory)/drop'
+    CleanTargetFolder: true
+    OverWrite: true
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
