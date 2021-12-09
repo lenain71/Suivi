@@ -11,5 +11,6 @@ export interface ISuiviService {
     GetAttachmentForSuivi(itemId: string) : Promise<Attachement[]>;
     RecolteData(itemId: string, comment: string, weight?: number) : Promise<IItemUpdateResult>;
     TransfertTo(itemId: string, zipGrowID: string, zipGrowType: string, serreType: string) : Promise<IItemAddResult>;
+    DuplicateData(itemId: string) : Promise<void>;
     DeleteData(itemId: string) : Promise<void>;
 }

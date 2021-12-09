@@ -3,9 +3,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/attachments";
-import { ISuiviService } from "../Contracts/ISuiviService";
-import { IItemUpdateResult } from "@pnp/sp/items";
-import { Attachement } from "../Entities/Attachement";
 import { ISemisService } from "../Contracts/ISemisService";
 import handleError from "../ErrorHandling/handleError";
 
@@ -59,6 +56,7 @@ export class SemisService implements ISemisService {
             });   
         } catch (error) {
            handleError(error); 
+           return Promise.reject(error);
         }
     }
 
@@ -107,14 +105,37 @@ export class SemisService implements ISemisService {
             });   
         } catch (error) {
             handleError(error);
+            return Promise.reject(error);
         }
     }
+
+    public async DuplicateData(itemId: string): Promise<void> {
+        try {
+            let data = await sp.web.lists.getByTitle("Semis").items.getById(Number(itemId)).get();
+ 
+            if(data != null) {
+                return await sp.web.lists.getByTitle("Semis").items.add(
+                    {
+                        ContentTypeId: data.ContentTypeId,
+                        InProduction: true,
+                        CultureTestId : data.CultureTestId,
+                        MyFood_CultureDate: new Date().toJSON(),
+                        MyFood_emplacement: data.MyFood_emplacement,
+                        Title: data.Title    
+                }).then((added) => {Promise.resolve(added);},(error) => {throw error;});
+            }
+        } catch (error) {
+            handleError(error);
+            return Promise.reject(error);
+        }
+     }
 
     public async DeleteData(itemId: string): Promise<void> {
         try {
             return await sp.web.lists.getByTitle("Semis").items.getById(Number(itemId)).delete();
         } catch (error) {
            handleError(error); 
+           return Promise.reject(error);
         }
        
     }

@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Redirect } from 'react-router-dom';
 import { GridLayout } from "@pnp/spfx-controls-react/lib/GridLayout";
-import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem,
-     PrimaryButton,
-      Button, ISize, IDocumentCardPreviewProps, ImageFit,
-       DocumentCard, DocumentCardType, DocumentCardPreview,
-        DocumentCardLocation, DocumentCardDetails, DocumentCardTitle,
-         DocumentCardActivity, DocumentCardActions, SearchBox, ChoiceGroup, IChoiceGroupOption, Label } from "office-ui-fabric-react";
+import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType,
+    Stack, StackItem,
+    PrimaryButton, ISize, IDocumentCardPreviewProps, ImageFit,
+    DocumentCard, DocumentCardType, DocumentCardPreview,
+    DocumentCardLocation, DocumentCardDetails, DocumentCardTitle,
+    DocumentCardActivity, DocumentCardActions, SearchBox, ChoiceGroup,
+    IChoiceGroupOption, Label, DefaultButton } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -17,7 +18,7 @@ import CreationRecolteDialog from "../Dialogs/RecolteDialog";
 import * as moment from "moment";
 import ResumeConfiguration from "../Common/ResumeConfiguration";
 import { ConfigureRenderer } from "../Common/ConfigureRenderer";
-import { Item } from "@pnp/sp/items";
+import { ExportToExcelRenderer } from "../Common/ExportToExcelRenderer";
 
 
 export default class EvolListData extends React.Component<IListDataProps, IListDataStates> {
@@ -130,6 +131,11 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
               onClick: this.showAndRecolteData.bind(this, item)
             },
             {
+                ariaLabel: 'Duppliquer',
+                iconProps:{iconName: 'DuplicateRow'},
+                onClick: this.duplicateData.bind(this,item.Id)
+            },
+            {
               ariaLabel: 'Supprimer',
               iconProps:{iconName:'Delete'},
               onClick: this.deleteData.bind(this, item.Id)
@@ -138,7 +144,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
       }
     
         return <div data-is-focusable={true} role="listitem" aria-label={item.title}>
-          <DocumentCard type={isCompact ? DocumentCardType.compact : DocumentCardType.normal}>
+          <DocumentCard type={isCompact ? DocumentCardType.compact : DocumentCardType.normal} >
             <DocumentCardPreview {...previewProps} />
             {!isCompact && <DocumentCardLocation 
                 location={this.CreateLabel(item)}
@@ -317,6 +323,15 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         });
     }
 
+    private duplicateData = (item: any) : void => {
+        this.setState({isLoaded: false});
+        this.props.suiviService.DuplicateData(item).then(() => {
+            this.loadData();
+        }).catch((error) => {
+            this.setState({isError: true, error: error.toString()});
+        });
+    }
+
     private recolteData = (error: any) : void => {
         if(error.return == 'OK') {
             this.loadData();
@@ -395,7 +410,8 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                     {!this.props.archiveMode &&
                         <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
                     }
-                    <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                    <DefaultButton iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                    <ExportToExcelRenderer items={this.state.items} />
                 </StackItem>
             );
         }

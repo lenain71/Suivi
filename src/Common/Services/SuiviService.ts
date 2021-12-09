@@ -5,9 +5,8 @@ import "@pnp/sp/items";
 import "@pnp/sp/fields";
 import "@pnp/sp/attachments";
 import { ISuiviService } from "../Contracts/ISuiviService";
-import { IItem, IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
+import { IItemAddResult, IItemUpdateResult } from "@pnp/sp/items";
 import { Attachement } from "../Entities/Attachement";
-import { IFieldInfo } from "@pnp/sp/fields";
 import handleError from "../ErrorHandling/handleError";
 
 export class SuiviService implements ISuiviService {
@@ -119,7 +118,36 @@ export class SuiviService implements ISuiviService {
         });   
       } catch (error) {
           handleError(error);
+          return Promise.reject(error);
       }
+    }
+
+    public async DuplicateData(itemId: string): Promise<void> {
+       try {
+           let data = await sp.web.lists.getByTitle("Suivi").items.getById(Number(itemId)).get();
+
+           if(data != null) {  
+               return await sp.web.lists.getByTitle("Suivi").items.add(
+                {
+                    ContentTypeId: data.ContentTypeId,
+                    InProduction: true,
+                    CultureTestId : data.CultureTestId,
+                    MyFood_CultureDate: new Date().toJSON(),
+                    MyFood_CultureType: data.MyFood_CultureType,
+                    MyFood_RecolteDate: null,
+                    MyFood_RecolteKG: null,
+                    MyFood_RecolteRemarque: null,
+                    MyFood_SerreType: data.MyFood_SerreType,
+                    MyFood_ZipGrowID: data.MyFood_ZipGrowID,
+                    MyFood_thumbnail: data.MyFood_thumbnail,
+                    MyFood_zipGrowType: data.MyFood_zipGrowType,
+                    Title: data.Title    
+               }).then((added) => {Promise.resolve(added);},(error) => {throw error;});
+           }
+       } catch (error) {
+           handleError(error);
+           return Promise.reject(error);
+       }
     }
 
     public async DeleteData(itemId: string): Promise<void> {
@@ -127,6 +155,7 @@ export class SuiviService implements ISuiviService {
             return await sp.web.lists.getByTitle("Suivi").items.getById(Number(itemId)).delete();
         } catch (error) {
            handleError(error); 
+           return Promise.reject(error);
         }
        
     }
@@ -173,7 +202,7 @@ export class SuiviService implements ISuiviService {
     
                 //call effective request
                 return sp.web.lists.getByTitle("Suivi").items
-                .select("MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
+                .select("Title","MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
                 .expand("CultureTest")
                 .filter(`Author eq ${user} and InProduction eq ${!archive ? 1 : 0}`)
                 .orderBy("MyFood_CultureDate", true)
@@ -181,8 +210,9 @@ export class SuiviService implements ISuiviService {
                     d.map((it) => {
                         let res: any = {
                             Id: it.Id,
+                            Title: it.Title,
                             MyFood_CultureType: it.CultureTest.Title,
-                            MyFood_CultureDate: it.MyFood_CultureDate,
+                            MyFood_CultureDate: new Date(it.MyFood_CultureDate),
                             MyFood_ZipGrowID: it.MyFood_ZipGrowID,
                             MyFood_zipGrowType: it.MyFood_zipGrowType,
                             MyFood_SerreType: it.MyFood_SerreType,
@@ -222,7 +252,7 @@ export class SuiviService implements ISuiviService {
                  });
     
                  return sp.web.lists.getByTitle("Suivi").items
-                    .select("MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
+                    .select("Title","MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
                     .expand("CultureTest")
                     .filter(`Author eq ${user} and MyFood_ZipGrowID eq ${zipGrowID} and InProduction eq ${!archive ? 1 : 0}`)
                     .orderBy("MyFood_CultureDate", true)
@@ -230,6 +260,7 @@ export class SuiviService implements ISuiviService {
                         d.map((it) => {
                             let res: any = {
                                 Id: it.Id,
+                                Title: it.Title,
                                 MyFood_CultureType: it.CultureTest.Title,
                                 MyFood_CultureDate: it.MyFood_CultureDate,
                                 MyFood_ZipGrowID: it.MyFood_ZipGrowID,
@@ -274,13 +305,14 @@ export class SuiviService implements ISuiviService {
                  });
     
                  return sp.web.lists.getByTitle("Suivi").items
-                    .select("MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
+                    .select("Title","MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
                     .expand("CultureTest")
                     .filter(`Author eq ${user} and MyFood_SerreType eq '${growingType}' and InProduction eq ${!archive ? 1 : 0}`)
                     .orderBy("MyFood_CultureDate", true).get().then((d: any) => {
                         d.map((it) => {
                             let res: any = {
                                 Id: it.Id,
+                                Title: it.Title,
                                 MyFood_CultureType: it.CultureTest.Title,
                                 MyFood_CultureDate: it.MyFood_CultureDate,
                                 MyFood_ZipGrowID: it.MyFood_ZipGrowID,

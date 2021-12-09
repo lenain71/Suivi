@@ -31,7 +31,7 @@ define([], function() {
     'MessageLoading' : 'Chargement de la webPart en cours...',
     'SearchPlaceHolder': 'Filtrer',
     'RecolteDialogTitle' : 'Recolter la culture',
-    'RecolteDialogPoid' : 'Poid de récolte (kg)',
+    'RecolteDialogPoid' : 'Poids de récolte (kg)',
     'RecolteDialogComment': 'Commentaire de récolte',
     'GoToDialogTitle': 'Basculter en culture',
     'GoToDialogSelect': 'Selectionner un emplacement',
