@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Redirect } from 'react-router-dom';
 import { GridLayout } from "@pnp/spfx-controls-react/lib/GridLayout";
-import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, Button, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions, SearchBox, Label } from "office-ui-fabric-react";
+import { Layer, Spinner, SpinnerSize, MessageBar, MessageBarType, Stack, StackItem, IStackTokens, PrimaryButton, TooltipHost, isElementFocusSubZone, ISize, IDocumentCardPreviewProps, ImageFit, DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardLocation, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions, SearchBox, Label, DefaultButton } from "office-ui-fabric-react";
 import styles from "../GestionCulture.module.scss";
 import { IListDataStates } from "./IListDataStates";
 import { IListDataProps } from "./IListDataProps";
@@ -13,6 +13,7 @@ import * as moment from "moment";
 import ResumeConfiguration from "../Common/ResumeConfiguration";
 import SemisMap from "../Common/SemisMap";
 import GoToDialog from "../Dialogs/GoToDialog";
+import { ExportToExcelRenderer } from "../Common/ExportToExcelRenderer";
 
 export default class SemisListData extends React.Component<IListDataProps, IListDataStates> {
 
@@ -86,7 +87,8 @@ export default class SemisListData extends React.Component<IListDataProps, IList
                     {!this.props.archiveMode &&
                         <PrimaryButton iconProps={{iconName: 'Add'} } text="Ajouter une culture" onClick={this.redirectToNew}/>
                     }
-                    <Button iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                    <DefaultButton iconProps={{iconName: 'EraseTool'}} text="Effacer le filtre" onClick={this.loadData}/>
+                    <ExportToExcelRenderer items={this.state.items} />
                 </StackItem>
                 <StackItem>
                     <SearchBox placeholder={strings.SearchPlaceHolder} value={this.state.searchValue} iconProps={{iconName: 'Filter'}} 
@@ -133,6 +135,11 @@ export default class SemisListData extends React.Component<IListDataProps, IList
               ariaLabel: 'Mettre en culture',
               iconProps:{iconName:'Accept'},
               onClick: this.showAndGoToData.bind(this, item)
+            },
+            {
+                ariaLabel: 'Dupliquer',
+                iconProps:{iconName: 'DuplicateRow'},
+                onClick: this.duplicateData.bind(this,item.Id)
             },
             {
               ariaLabel: 'Supprimer',
@@ -222,6 +229,15 @@ export default class SemisListData extends React.Component<IListDataProps, IList
     private deleteData = (id: string) : void => {
         this.setState({isLoaded: false});
         this.props.semisService.DeleteData(id).then(() => {
+            this.loadData();
+        }).catch((error) => {
+            this.setState({isError: true, error: error.toString()});
+        });
+    }
+
+    private duplicateData = (item: any) : void => {
+        this.setState({isLoaded: false});
+        this.props.semisService.DuplicateData(item).then(() => {
             this.loadData();
         }).catch((error) => {
             this.setState({isError: true, error: error.toString()});
