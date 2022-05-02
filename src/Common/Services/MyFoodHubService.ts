@@ -18,21 +18,23 @@ export default class MyFoodHubService implements IMyFoodHubService
 
         let httpClientOptions: IHttpClientOptions = {  
             headers: {
-                'authorization': `ApiKey ${this.configuration.MyFood_HubSecureApiKey}`
+                'Accept':'*/*',
+              //  'odata-version':'',
+                'Sigfox-Authorization': `Bearer ${this.configuration.MyFood_HubSecureApiKey}`
             },
             method: 'GET'
         };
 
-        let url: string = `${this.configuration.MyFood_HubServiceUrl}/${encodeURIComponent(username)}/`;
+        let url: string = `${this.configuration.MyFood_HubServiceUrl}?O365account=${encodeURIComponent(username)}`;
 
         return this.spHttpClient.get(url, SPHttpClient.configurations.v1,httpClientOptions)  
                 .then((response: SPHttpClientResponse) => {
                     if(response.ok) {
                         return response.json().then((data: any) => {
                             let result = new Array<MyFoodHubConfiguration>();
-                            data.map((conf) => {
-                                result.push(conf);
-                            });
+                            
+                                result.push(data.data);
+                         
                             return Promise.resolve(result) ;
                         })
                         .catch((error) => {

@@ -7,21 +7,18 @@ export default class MockMyFoodHubService implements IMyFoodHubService
         let result = new Array<MyFoodHubConfiguration>();
 
         result.push({
-            Id: 0,
-            startDate: new Date(),
-            locationLatitude: 12.2,
-            locationLongitude: 12.2,
-            version : "1.1",
-            info: "info",
-            lastMeasureReceived: new Date(),
-            productionUnitType: "Aquaponique 13 tours",
-            hydroponicType : "Aqua v2",
+            productionUnitStartDate: new Date(),
+            location: 'DIJON',
+            productionUnitInfo:  "info",
+            onlineSinceWeeks: 12,
+            productionUnitTypeName:  "Aquaponique 13 tours",
+            productionUnitOptions: "",
+            productionUnitTypeImage: null,
             productionUnitStatus: "Production",
             pionnerCitizenOffice365Account: "charly.delarche@googlemail.com",
-            pioneerCitizen : "Charly D",
+            pioneerCitizenName : "Charly D",
             pioneerCitizenNumber: "244",
-            picturePath: null,
-            options: []
+            picturePath: null
         });
 
         return Promise.resolve(result);

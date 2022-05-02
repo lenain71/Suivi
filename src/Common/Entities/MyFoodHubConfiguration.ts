@@ -1,23 +1,15 @@
 export default class MyFoodHubConfiguration {
-    public Id: number;
-    public startDate: Date;
-    public locationLatitude: number;
-    public locationLongitude: number;
-    public version: string;
-    public info: string;
-    public lastMeasureReceived: Date;
-    public productionUnitType: string;
-    public hydroponicType: string;
+   
+    public productionUnitStartDate: Date;
+    public location: string;
+    public productionUnitInfo: string;
+    public onlineSinceWeeks: number;
+    public productionUnitTypeName: string;
     public productionUnitStatus: string;
     public pionnerCitizenOffice365Account: string;
-    public pioneerCitizen: string;
+    public pioneerCitizenName: string;
     public pioneerCitizenNumber: string;
+    public productionUnitTypeImage: string;
+    public productionUnitOptions: string;
     public picturePath: string;
-    public options: Options[];
-}
-
-class Options {
-    public Id: number;
-    public name: string;
-    public description: string;
 }
