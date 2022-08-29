@@ -19,11 +19,13 @@ import * as moment from "moment";
 import ResumeConfiguration from "../Common/ResumeConfiguration";
 import { ConfigureRenderer } from "../Common/ConfigureRenderer";
 import { ExportToExcelRenderer } from "../Common/ExportToExcelRenderer";
+import { PnPClientStorage } from "@pnp/common";
 
 
 export default class EvolListData extends React.Component<IListDataProps, IListDataStates> {
 
     private initialItems: any[];
+    private _pnpStorage: PnPClientStorage;
 
     constructor(props: any) {
         super(props);
@@ -41,6 +43,7 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
         isLoaded: false,
         FitlterQRMode: false
     };
+    this._pnpStorage = new PnPClientStorage();
 
       this.initialItems = this.state.items;
       this.redirectToNew = this.redirectToNew.bind(this);
@@ -195,7 +198,8 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
             //information type de serre
             this.props.suiviService.GetGrowingType().then(data => {
                 let groups: IChoiceGroupOption[] = [];
-
+                 //récupère la configuration choisie pour dynamiquement faire les filtres
+                let config : string = this._pnpStorage.local.get("myfood:map");
                 data.map(val => {
                     let iconName: string;
 
@@ -217,20 +221,23 @@ export default class EvolListData extends React.Component<IListDataProps, IListD
                         iconName='Inbox';
                     }
 
-                    groups.push(
-                        {
-                            key: val,
-                            iconProps: { iconName: iconName },
-                            text: val, // This text is long to show text wrapping.
-                        }
-                    );
+                    //Add only configuration available
+                    if((val == 'City' && config == 'city') || (val == 'Familly' && config == 'familly') || (val != 'City' && val != 'Familly')) {
+                        groups.push(
+                            {
+                                key: val,
+                                iconProps: { iconName: iconName },
+                                text: val,
+                            }
+                        );
+                    }
                 });
                 
                 //add other group
                 groups.push({
                     key: 'Tous',
                     iconProps: { iconName: 'AllApps' },
-                    text: 'Tous', // This text is long to show text wrapping.
+                    text: 'Tous',
                 });
 
                 this.setState({growingType: groups});
