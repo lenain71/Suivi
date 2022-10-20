@@ -19,6 +19,7 @@ export class SemisService implements ISemisService {
             return await sp.web.lists.getByTitle("Types de Cultures").items
             .select("Id","MyFood_thumbnail")
             .orderBy("Title",true)
+            .top(5000)
             .usingCaching()
             .get().then((data: any) => {
                 data.map((item, idx)=> {
@@ -34,7 +35,7 @@ export class SemisService implements ISemisService {
                 .select("MyFood_CultureDate","Id","MyFood_thumbnail","CultureTestId","CultureTest/Title","MyFood_emplacement")
                 .expand("CultureTest")
                 .filter(`Author eq ${user} and MyFood_emplacement eq '${emplacement}' and InProduction eq ${!archive ? 1 : 0}`)
-                .orderBy("MyFood_CultureDate", true).get().then((d: any) => {
+                .orderBy("MyFood_CultureDate", true).top(5000).get().then((d: any) => {
                     d.map((it) => {
                         let res: any = {
                             Id: it.Id,
@@ -68,6 +69,7 @@ export class SemisService implements ISemisService {
             return await sp.web.lists.getByTitle("Types de Cultures").items
             .select("Id","MyFood_thumbnail")
             .orderBy("Title",true)
+            .top(5000)
             .usingCaching()
             .get().then((data: any) => {
                 data.map((item, idx)=> {
@@ -83,7 +85,7 @@ export class SemisService implements ISemisService {
                 .select("MyFood_CultureDate","Id","MyFood_thumbnail","CultureTestId","CultureTest/Title","MyFood_emplacement")
                 .expand("CultureTest")
                 .filter(`Author eq ${user} and InProduction eq ${!archive ? 1 : 0}`)
-                .orderBy("MyFood_CultureDate", true).get().then((d: any) => {
+                .orderBy("MyFood_CultureDate", true).top(5000).get().then((d: any) => {
                     d.map((it) => {
                         let res: any = {
                             Id: it.Id,

@@ -44,6 +44,7 @@ export class SuiviService implements ISuiviService {
             .select("MyFood_zipGrowType","MyFood_ZipGrowID","MyFood_SerreType")
             .filter(`Author eq ${user} and (MyFood_SerreType ne 'Incubateur' and MyFood_SerreType ne 'Aerospring' and MyFood_SerreType ne 'Bac Perma')`)
             .orderBy("MyFood_ZipGrowID", true)
+            .top(5000)
             .usingCaching()
             .get();   
         } catch (error) {
@@ -190,6 +191,7 @@ export class SuiviService implements ISuiviService {
             return await sp.web.lists.getByTitle("Types de Cultures").items
             .select("Id","MyFood_thumbnail")
             .orderBy("Title",true)
+            .top(5000)
             .usingCaching()
             .get().then((data: any) => {
                 data.map((item, idx)=> {
@@ -206,6 +208,7 @@ export class SuiviService implements ISuiviService {
                 .expand("CultureTest")
                 .filter(`Author eq ${user} and InProduction eq ${!archive ? 1 : 0}`)
                 .orderBy("MyFood_CultureDate", true)
+                .top(5000)
                 .get().then((d: any) => {
                     d.map((it) => {
                         let res: any = {
@@ -241,6 +244,7 @@ export class SuiviService implements ISuiviService {
              return await sp.web.lists.getByTitle("Types de Cultures").items
              .select("Id","MyFood_thumbnail")
              .orderBy("Title",true)
+             .top(5000)
              .usingCaching()
              .get().then((data: any) => {
                  data.map((item, idx)=> {
@@ -256,6 +260,7 @@ export class SuiviService implements ISuiviService {
                     .expand("CultureTest")
                     .filter(`Author eq ${user} and MyFood_ZipGrowID eq ${zipGrowID} and InProduction eq ${!archive ? 1 : 0}`)
                     .orderBy("MyFood_CultureDate", true)
+                    .top(5000)
                     .get().then((d: any) => {
                         d.map((it) => {
                             let res: any = {
@@ -294,6 +299,7 @@ export class SuiviService implements ISuiviService {
              return await sp.web.lists.getByTitle("Types de Cultures").items
              .select("Id","MyFood_thumbnail")
              .orderBy("Title",true)
+             .top(5000)
              .usingCaching()
              .get().then((data: any) => {
                  data.map((item, idx)=> {
@@ -308,7 +314,7 @@ export class SuiviService implements ISuiviService {
                     .select("Title","MyFood_CultureDate","MyFood_zipGrowType","MyFood_SerreType","Id","MyFood_ZipGrowID","MyFood_thumbnail","CultureTestId","CultureTest/Title")
                     .expand("CultureTest")
                     .filter(`Author eq ${user} and MyFood_SerreType eq '${growingType}' and InProduction eq ${!archive ? 1 : 0}`)
-                    .orderBy("MyFood_CultureDate", true).get().then((d: any) => {
+                    .orderBy("MyFood_CultureDate", true).top(5000).get().then((d: any) => {
                         d.map((it) => {
                             let res: any = {
                                 Id: it.Id,
