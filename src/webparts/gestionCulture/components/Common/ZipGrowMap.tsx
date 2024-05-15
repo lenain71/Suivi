@@ -7,6 +7,7 @@ import { PnPClientStorage } from "@pnp/common";
 import * as strings from "GestionCultureWebPartStrings";
 import { Dropdown, IDropdownOption, MessageBar, MessageBarType } from "office-ui-fabric-react";
 import { dateAdd } from "@pnp/common";
+import { name } from "settings/environmentSettings";
 
 export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowStates> {
 
@@ -104,13 +105,54 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
                     {name:"23", coords:[477,192,536,253], shape:"rect", FillColor: "red"},
                     {name:"24", coords:[476,272,536,334], shape:"rect", FillColor: "red"}
                 ]
+            },
+            {
+                type: "familly3",
+                name:"myfood-familly3-map",
+                imageUrl:"https://neosideadesign.sharepoint.com/sites/MyFoodSuivi/SiteAssets/FamillyNew3.png",
+                width: null,
+                imageWidth: null,
+                areas: [
+                    { name:"1",coords:[79,90,22,30], shape:"rect", FillColor:"red"},
+                    {name:"2", coords:[20,110,79,173] , shape:"rect", FillColor:"red" },
+                    {name:"3", coords:[19,191,81,252] , shape:"rect", FillColor:"red"},
+                    {name:"4", coords:[21,273,79,333] , shape:"rect", FillColor:"red"},
+                    {name:"5", coords:[103,27,162,87] , shape:"rect", FillColor:"red"},
+                    {name:"6", coords:[102,109,162,172] , shape:"rect", FillColor:"red"},
+                    {name:"7", coords:[103,190,163,252] , shape:"rect", FillColor:"red"},
+                    {name:"8", coords:[101,273,162,334] , shape:"rect", FillColor:"red"},
+                    {name:"9", coords:[185,26,245,91] , shape:"rect", FillColor:"red"},
+                    {name:"10", coords:[184,109,244,171] , shape:"rect", FillColor:"red"},
+                    {name:"11", coords:[185,192,244,252] , shape:"rect", FillColor:"red"},
+                    {name:"12", coords:[184,272,246,336] , shape:"rect", FillColor:"red"},
+                    {name:"13", coords:[313,28,373,89] , shape:"rect", FillColor:"red"},
+                    {name:"14", coords:[311,109,373,172] , shape:"rect", FillColor:"red"},
+                    {name:"15", coords:[312,192,372,253] , shape:"rect", FillColor:"red"},
+                    {name:"16", coords:[313,272,375,334] , shape:"rect", FillColor:"red"},
+                    {name:"17", coords:[395,27,456,90] , shape:"rect", FillColor:"red"},
+                    {name:"18", coords:[394,108,454,171] , shape:"rect", FillColor:"red"},
+                    {name:"19", coords:[394,192,454,253] , shape:"rect", FillColor:"red"},
+                    {name:"20", coords:[395,273,455,336] , shape:"rect", FillColor:"red"},
+                    {name:"21", coords:[477,28,536,89] , shape:"rect", FillColor:"red"},
+                    {name:"22", coords:[476,110,538,171] , shape:"rect", FillColor:"red"},
+                    {name:"23", coords:[475,191,538,252] , shape:"rect", FillColor:"red"},
+                    {name:"24", coords:[475,272,538,335] , shape:"rect", FillColor:"red"},
+                    {name:"25", coords:[603,27,665,88] , shape:"rect", FillColor:"red"},
+                    {name:"26", coords:[603,110,665,171] , shape:"rect", FillColor:"red"},
+                    {name:"27", coords:[604,191,664,253] , shape:"rect", FillColor:"red"},
+                    {name:"28", coords:[602,272,665,334] , shape:"rect", FillColor:"red"},
+                    {name:"29", coords:[686,27,747,89] , shape:"rect", FillColor:"red"},
+                    {name:"30", coords:[687,111,746,170] , shape:"rect", FillColor:"red"},
+                    {name:"31", coords:[685,192,746,252] , shape:"rect", FillColor:"red"},
+                    {name:"32", coords:[686,273,747,333] , shape:"rect", FillColor:"red"},
+                    {name:"33", coords:[767,28,830,89] , shape:"rect", FillColor:"red"},
+                    {name:"34", coords:[769,110,831,171] , shape:"rect", FillColor:"red"},
+                    {name:"35", coords:[767,193,828,251] , shape:"rect", FillColor:"red"},
+                    {name:"36", coords:[767,272,829,333] , shape:"rect", FillColor:"red"}
+                ]
             }
         ];
-
-
-
-
-
+        
         this.state = {
             hoveredArea : null,
             selectedMap: null,
@@ -119,7 +161,8 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
 
           this.load = this.load.bind(this);
           this.selectConfiguration = this.selectConfiguration.bind(this);
-    }
+    
+        }
 
     public componentDidMount() : void {
         this.load();
@@ -156,6 +199,7 @@ export default class ZipGrowMap extends React.Component<IZipGrowProps, IZipGrowS
                         options={[
                         { key: 'city', text: 'city' },
                         { key: 'familly', text: 'familly' },
+                        { key: 'familly3', text: 'familly 3 bassins'},
                         { key: 'aerospring', text: 'aerospring', disabled: true }
                         ]}
                         required={true}
